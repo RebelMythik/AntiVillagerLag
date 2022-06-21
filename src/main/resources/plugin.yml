@@ -1,5 +1,0 @@
-name: AntiVillagerLag
-version: '${project.version}'
-main: me.rebelmythik.antivillagerlag.AntiVillagerLag
-api-version: 1.18
-description: make villagers not lag the server
