@@ -1,1 +1,2 @@
 # AntiVillagerLag
+This is a simple plugin that allows your players to optimize their own villagers and does not effect anything vanilla wise. I am making this plugin due to massive trading halls tanking mspt on my servers and others. This will allow trading halls to keep their twice a day villager restocks but won't effect any farms Villagers will be used in such as Iron Golem Farms, Villager Breeders, Raid Farms, Etc.
