@@ -15,6 +15,36 @@ public class TradeRestocks implements Listener {
         this.plugin = plugin;
     }
 
+    public void restock(Villager v) {
+        List<MerchantRecipe> recipes = v.getRecipes();
+        for (MerchantRecipe r : recipes) {
+            r.setUses(0);
+        }
+    }
+
+    public void setNewTime(Villager v) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "time");
+        container.set(key, PersistentDataType.LONG, plugin.getServer().getWorld("world").getGameTime());
+    }
+
+    public boolean hasTime(Villager v) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "time");
+        if (container.has(key, PersistentDataType.LONG)) {
+            return true;
+        }
+        return false;
+    }
+
+    public long getTime(Villager v) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "time");
+        long time = container.get(key, PersistentDataType.LONG);
+        return time;
+    }
+
+    @EventHandler
     public void clickVillager(PlayerInteractEntityEvent e) {
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
         Villager vil = (Villager) e.getRightClicked();
