@@ -1,0 +1,12 @@
+# What block the villager needs to be standing on to be ignored
+NameThatDisables: 'Optimize'
+
+# Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
+# Time 2 must be bigger than time 1
+RestockTimes:
+  time1: 1000
+  time2: 13000
+
+messages:
+  no-permission: "&cYou don't have permission to use this command."
+  reload-message: "&aPlugin successfully reloaded."

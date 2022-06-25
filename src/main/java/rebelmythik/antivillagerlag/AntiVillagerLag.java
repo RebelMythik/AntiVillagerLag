@@ -14,6 +14,7 @@ public final class AntiVillagerLag extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new DisableVillagerAI(this), this);
         this.getServer().getPluginManager().registerEvents(new ReEnableVillagerAI(this), this);
         this.getServer().getPluginManager().registerEvents(new TradeRestocks(this), this);
+        saveDefaultConfig();
     }
 
     @Override

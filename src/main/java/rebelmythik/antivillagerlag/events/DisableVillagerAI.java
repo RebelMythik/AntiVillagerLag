@@ -34,10 +34,13 @@ public class DisableVillagerAI implements Listener {
         if (e.getHand().equals(EquipmentSlot.HAND)) {
             if (!inv.getItemInMainHand().getType().equals(Material.NAME_TAG)) return;
             item = inv.getItemInMainHand();
+            inv.getItemInMainHand().setAmount(inv.getItemInMainHand().getAmount() + 1);
         } else {
             if (!inv.getItemInOffHand().getType().equals(Material.NAME_TAG)) return;
             item = inv.getItemInOffHand();
+            inv.getItemInOffHand().setAmount(inv.getItemInOffHand().getAmount() + 1);
         }
+
         if (!item.getItemMeta().getDisplayName().equals(plugin.getConfig().getString("NameThatDisables"))) return;
         vil.setAI(false);
     }

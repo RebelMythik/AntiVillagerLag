@@ -17,12 +17,14 @@ import java.util.List;
 public class TradeRestocks implements Listener {
 
     public AntiVillagerLag plugin;
-    public long restock1 = 1000;
-    public long restock2 = 13000;
+    public long restock1;
+    public long restock2;
 
 
     public TradeRestocks(AntiVillagerLag plugin) {
         this.plugin = plugin;
+        restock1 = plugin.getConfig().getLong("RestockTimes.time1");
+        restock2 = plugin.getConfig().getLong("RestockTimes.time2");
     }
 
     public void restock(Villager v) {
@@ -35,7 +37,7 @@ public class TradeRestocks implements Listener {
     public void setNewTime(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "time");
-        container.set(key, PersistentDataType.LONG, plugin.getServer().getWorld("world").getGameTime());
+        container.set(key, PersistentDataType.LONG, plugin.getServer().getWorld("world").getTime());
     }
 
     public boolean hasTime(Villager v) {
@@ -68,36 +70,43 @@ public class TradeRestocks implements Listener {
         }
         //if he does have a time, get it; also create time variables
         World world = plugin.getServer().getWorld("world");
-        long time = world.getGameTime();
-        long numOfTicksInDay = 24000;
-        long curTick = time % numOfTicksInDay;
-        long curDay = (time - curTick) / numOfTicksInDay;
-        long lastTime = getTime(vil);
-        long vilTick = lastTime % numOfTicksInDay;
-        long vilDay = (lastTime - vilTick) / numOfTicksInDay;
+        long curTick = world.getTime();
+        long vilTick = getTime(vil);
 
         //Check if he should be restocked
-        System.out.println("lastTime: " + Long.toString(lastTime));
-        System.out.println("curDay: " + Long.toString(curDay));
         System.out.println("curTick: " + Long.toString(curTick));
-        System.out.println("vilDay: " + Long.toString(vilDay));
         System.out.println("vilTick: " + Long.toString(vilTick));
-        if (curDay == vilDay) {
+        if (curTick >= vilTick) {
+            System.out.println("Time is equal");
             if (curTick >= restock2) {
+                System.out.println("Curtick is > than Restock2");
+                System.out.println(vilTick);
+                System.out.println(restock2);
+                System.out.println(restock1);
                 if (vilTick <= restock2) {
+                    System.out.println("vilTick is less than Restock2");
                     restock(vil);
+                    System.out.println("Restocked Villager!");
                     setNewTime(vil);
+                    System.out.println("Set new time");
                 }
             } else if (curTick >= restock1) {
+                System.out.println("Current tick is greater than Restock1");
                 if (vilTick <= restock1) {
+                    System.out.println("viltick is less than restock1");
                     restock(vil);
+                    System.out.println("Restocked Villager!");
                     setNewTime(vil);
+                    System.out.println("Set new time");
                 }
             }
         } else {
             if (curTick >= restock1) {
+                System.out.println("Current tick is greater than or equal to restock1");
                 restock(vil);
+                System.out.println("Restocked Villager!");
                 setNewTime(vil);
+                System.out.println("Set new time");
             }
         }
     }
