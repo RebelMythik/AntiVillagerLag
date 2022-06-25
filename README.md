@@ -12,9 +12,9 @@ While the villagers are optimized they will not level up at all. The player will
 
 ## Features of the Plugin
 
-Nametags with the name that is configured in the yml will not be used. This is just to allow easy renaming of all villagers and not have to spend a bunch of resources getting nametags which wil discourage players from wanting to do it. 
+Nametags will not be used when renaming villagers. This is just to allow easy renaming of all villagers and not have to spend a bunch of resources getting nametags which wil discourage players from wanting to do it. 
 
-Automatically restocks villagers are two set times which are configurable. 
+Automatically restocks villagers at two set times which are configurable. 
 
 ## Bugs and Support
 
