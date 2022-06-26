@@ -19,7 +19,7 @@ You name a villager with a nametag that matches the name configured in the yml a
 
 ## Please Note
 
-While the villagers are optimized they will not level up at all. The player will need to rename the villager for it to level up. 
+While the villagers are optimized they will not level up at all, sleep in beds, or breed while ai is disabled. The player will need to rename the villager for it to level up. 
 
 ## Features of the Plugin
 
