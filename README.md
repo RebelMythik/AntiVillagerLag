@@ -1,4 +1,8 @@
-![code quality grade](https://api.codiga.io/project/33875/status/svg) ![code quality score](https://api.codiga.io/project/33875/score/svg) ![discord](https://img.shields.io/discord/990400053673873428?label=discord&style=for-the-badge&color=blue)
+![code quality grade](https://api.codiga.io/project/33875/status/svg) ![code quality score](https://api.codiga.io/project/33875/score/svg) <p align="center">
+    <a href="https://discord.gg/WWWeAqwcU6" alt="Discord">
+        <img src="https://img.shields.io/discord/990400053673873428?label=discord&style=for-the-badge&color=blue"/>
+    </a>
+</p> 
 # AntiVillagerLag 
 This is a simple plugin that allows your players to optimize their own villagers and does not effect anything vanilla wise. I am making this plugin due to massive trading halls tanking mspt on my servers and others. This will allow trading halls to keep their twice a day villager restocks but won't affect any farms Villagers will be used in, such as Iron Golem Farms, Villager Breeders, Raid Farms, Etc.
 
