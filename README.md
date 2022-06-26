@@ -5,7 +5,7 @@
     <a href="https://api.codiga.io/project/33875/score/svg" alt="Code Grade">
         <img src="https://api.codiga.io/project/33875/score/svg"/>
     </a>
-    <a href="https://discord.gg/invite/" alt="Discord">
+    <a href="https://discord.gg/WWWeAqwcU6/" alt="Discord">
         <img src="https://img.shields.io/discord/990400053673873428?label=Discord"/>
     </a>
 </p>
@@ -31,4 +31,4 @@ Automatically restocks villagers at two set times which are configurable.
 
 If you encounter any bugs please open a github issue. I will try to solve it as soon as possible!
 
-For support you can join the discord here: Discord Link (No Actual Discord yet)
+For support, you can join the [Discord Server](https://discord.gg/WWWeAqwcU6)
