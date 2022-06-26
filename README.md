@@ -5,7 +5,7 @@
     <a href="https://api.codiga.io/project/33875/score/svg" alt="Code Grade">
         <img src="https://api.codiga.io/project/33875/score/svg"/>
     </a>
-    <a href="https://discord.gg/WWWeAqwcU6/" alt="Discord">
+    <a href="https://discord.gg/WWWeAqwcU6" alt="Discord">
         <img src="https://img.shields.io/discord/990400053673873428?label=Discord"/>
     </a>
 </p>
