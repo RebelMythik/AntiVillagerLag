@@ -1,4 +1,4 @@
-![code quality grade](https://api.codiga.io/project/33875/status/svg) ![code quality score](https://api.codiga.io/project/33875/score/svg) <p align="center">
+![code quality grade](https://api.codiga.io/project/33875/status/svg) ![code quality score](https://api.codiga.io/project/33875/score/svg) <p>
     <a href="https://discord.gg/WWWeAqwcU6" alt="Discord">
         <img src="https://img.shields.io/discord/990400053673873428?label=discord&style=for-the-badge&color=blue"/>
     </a>
