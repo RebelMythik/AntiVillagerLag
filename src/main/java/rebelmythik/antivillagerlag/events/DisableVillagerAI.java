@@ -20,6 +20,7 @@ public class DisableVillagerAI implements Listener {
 
     public DisableVillagerAI(AntiVillagerLag plugin) {
         this.plugin = plugin;
+        this.plugin = plugin;
     }
 
     @EventHandler

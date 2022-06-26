@@ -62,11 +62,10 @@ public class TradeRestocks implements Listener {
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
         Villager vil = (Villager) e.getRightClicked();
         if (!vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables"))) return;
+
         //If he doesn't have a time, restock
-        System.out.println(hasTime(vil));
         if (!hasTime(vil)) {
             setNewTime(vil);
-            System.out.println("Should have time now");
         }
         //if he does have a time, get it; also create time variables
         World world = plugin.getServer().getWorld("world");
@@ -74,39 +73,22 @@ public class TradeRestocks implements Listener {
         long vilTick = getTime(vil);
 
         //Check if he should be restocked
-        System.out.println("curTick: " + Long.toString(curTick));
-        System.out.println("vilTick: " + Long.toString(vilTick));
         if (curTick >= vilTick) {
-            System.out.println("Time is equal");
             if (curTick >= restock2) {
-                System.out.println("Curtick is > than Restock2");
-                System.out.println(vilTick);
-                System.out.println(restock2);
-                System.out.println(restock1);
                 if (vilTick <= restock2) {
-                    System.out.println("vilTick is less than Restock2");
                     restock(vil);
-                    System.out.println("Restocked Villager!");
                     setNewTime(vil);
-                    System.out.println("Set new time");
                 }
             } else if (curTick >= restock1) {
-                System.out.println("Current tick is greater than Restock1");
                 if (vilTick <= restock1) {
-                    System.out.println("viltick is less than restock1");
                     restock(vil);
-                    System.out.println("Restocked Villager!");
                     setNewTime(vil);
-                    System.out.println("Set new time");
                 }
             }
         } else {
             if (curTick >= restock1) {
-                System.out.println("Current tick is greater than or equal to restock1");
                 restock(vil);
-                System.out.println("Restocked Villager!");
                 setNewTime(vil);
-                System.out.println("Set new time");
             }
         }
     }
