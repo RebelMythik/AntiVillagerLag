@@ -44,10 +44,7 @@ public class TradeRestocks implements Listener {
     public boolean hasTime(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "time");
-        if (container.has(key, PersistentDataType.LONG)) {
-            return true;
-        }
-        return false;
+        return (container.has(key, PersistentDataType.LONG));
     }
 
     public long getTime(Villager v) {

@@ -23,13 +23,12 @@ public class ReEnableVillagerAI implements Listener {
     public AntiVillagerLag plugin;
     long cooldown;
     colorcode colorcodes = new colorcode();
+    long currenttime = System.currentTimeMillis() / 1000;
 
     public ReEnableVillagerAI(AntiVillagerLag plugin) {
         this.plugin = plugin;
         cooldown = plugin.getConfig().getLong("cooldown");
     }
-
-    long currenttime = System.currentTimeMillis() / 1000;
 
     public void setNewCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
@@ -40,10 +39,7 @@ public class ReEnableVillagerAI implements Listener {
     public boolean hasCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "cooldown");
-        if (container.has(key, PersistentDataType.LONG)) {
-            return true;
-        }
-        return false;
+        return (container.has(key, PersistentDataType.LONG));
     }
     public long getCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
