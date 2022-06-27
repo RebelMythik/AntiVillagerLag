@@ -17,7 +17,8 @@ While the villagers are optimized they will not level up at all, sleep in beds, 
 
 ## Features of the Plugin
 
-Nametags will not be used when renaming villagers. This is just to allow easy renaming of all villagers and not have to spend a bunch of resources getting nametags which wil discourage players from wanting to do it. 
+Nametags will not be used when renaming villagers. This is just to allow easy renaming of all villagers and not have to spend a bunch of resources getting nametags which wil discourage players from wanting to do it. There is a cooldown between renaming villagers to prevent exploiting vanilla restocking and the
+plugin restocking from both happening in a single day. 
 
 Automatically restocks villagers at two set times which are configurable. 
 
