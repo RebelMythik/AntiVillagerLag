@@ -54,7 +54,7 @@ public class ReEnableVillagerAI implements Listener {
 
     @EventHandler
     public void RightClick(PlayerInteractEntityEvent e) {
-
+        boolean right = true;
         Player player = e.getPlayer();
         Entity entity = e.getRightClicked();
         PlayerInventory inv = player.getInventory();
@@ -75,8 +75,25 @@ public class ReEnableVillagerAI implements Listener {
         } else {
             if (!inv.getItemInOffHand().getType().equals(Material.NAME_TAG)) return;
             item = inv.getItemInOffHand();
+            right = false;
         }
         if (item.getItemMeta().getDisplayName().equals(plugin.getConfig().getString("NameThatDisables"))) return;
+        if (vilCooldown >= currenttime) {
+            String message = plugin.getConfig().getString("messages.cooldown-message");
+            int index = message.indexOf("%cooldown%");
+            String message1 = message.substring(0, index);
+            String message2 = message.substring(index + 10, message.length());
+            String finalMessage = message1 + Long.toString(vilCooldown - currenttime) + message2;
+            player.sendMessage(colorcodes.cm(finalMessage));
+            e.setCancelled(true);
+            return;
+        }
+        if (right) {
+            inv.getItemInMainHand().setAmount(inv.getItemInMainHand().getAmount() + 1);
+        } else {
+            inv.getItemInOffHand().setAmount(inv.getItemInOffHand().getAmount() + 1);
+        }
         vil.setAI(true);
+        setNewCooldown(vil);
     }
 }

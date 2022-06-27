@@ -53,7 +53,7 @@ public class DisableVillagerAI implements Listener {
 
     @EventHandler
     public void RightClick(PlayerInteractEntityEvent e) {
-
+        boolean right = true;
         Player player = e.getPlayer();
         Entity entity = e.getRightClicked();
         PlayerInventory inv = player.getInventory();
@@ -93,5 +93,6 @@ public class DisableVillagerAI implements Listener {
             inv.getItemInOffHand().setAmount(inv.getItemInOffHand().getAmount() + 1);
         }
         vil.setAI(false);
+        setNewCooldown(vil);
     }
 }
