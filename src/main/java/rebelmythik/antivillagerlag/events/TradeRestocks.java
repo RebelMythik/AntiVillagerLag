@@ -59,7 +59,9 @@ public class TradeRestocks implements Listener {
         //is it the villager we want?
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
         Villager vil = (Villager) e.getRightClicked();
-        if (!vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables"))) return;
+        if ((vil.getCustomName()!=null)&&(!vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))){
+            return;
+        }
 
         //If he doesn't have a time, restock
         if (!hasTime(vil)) {

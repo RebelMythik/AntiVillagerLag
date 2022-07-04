@@ -73,7 +73,7 @@ public class ReEnableVillagerAI implements Listener {
             item = inv.getItemInOffHand();
             right = false;
         }
-        if (item.getItemMeta().getDisplayName().equals(plugin.getConfig().getString("NameThatDisables"))) return;
+        if (item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
         if (vilCooldown >= currenttime) {
             String message = plugin.getConfig().getString("messages.cooldown-message");
             int index = message.indexOf("%cooldown%");

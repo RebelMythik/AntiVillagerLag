@@ -64,7 +64,9 @@ public class DisableVillagerAI implements Listener {
         //If he doesn't have a cooldown, add it?
         if (!hasCooldown(vil)) {
             setNewCooldown(vil);
+            return;
         }
+
         long vilCooldown = getCooldown(vil);
         //
 
@@ -76,7 +78,7 @@ public class DisableVillagerAI implements Listener {
             item = inv.getItemInOffHand();
             right = false;
         }
-        if (!item.getItemMeta().getDisplayName().equals(plugin.getConfig().getString("NameThatDisables"))) return;
+        if (!item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
         if (vilCooldown >= currenttime) {
             String message = plugin.getConfig().getString("messages.cooldown-message");
             int index = message.indexOf("%cooldown%");
