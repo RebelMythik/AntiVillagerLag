@@ -61,6 +61,7 @@ public class ReEnableVillagerAI implements Listener {
         //If he doesn't have a cooldown, add it?
         if (!hasCooldown(vil)) {
             setNewCooldown(vil);
+            return;
         }
         long vilCooldown = getCooldown(vil);
         //
