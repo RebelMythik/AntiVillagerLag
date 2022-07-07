@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -36,16 +35,26 @@ public class ReEnableVillagerAI implements Listener {
         currenttime = System.currentTimeMillis() / 1000;
         container.set(key, PersistentDataType.LONG, currenttime + cooldown);
     }
+
     public boolean hasCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "cooldown");
-        return (container.has(key, PersistentDataType.LONG));
+        return container.has(key, PersistentDataType.LONG);
     }
+
     public long getCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "cooldown");
         long time = container.get(key, PersistentDataType.LONG);
         return time;
+    }
+
+    public String replaceText(String text, String stuff2cut, String replacement) {
+        int index = text.indexOf(stuff2cut);
+        String text1 = text.substring(0, index);
+        String text2 = text.substring(index + stuff2cut.length(), text.length());
+        String finalText = text1 + replacement + text2;
+        return finalText;
     }
 
     @EventHandler
@@ -63,6 +72,7 @@ public class ReEnableVillagerAI implements Listener {
             setNewCooldown(vil);
             return;
         }
+
         long vilCooldown = getCooldown(vil);
         //
 
@@ -98,6 +108,7 @@ public class ReEnableVillagerAI implements Listener {
         } else {
             inv.getItemInOffHand().setAmount(inv.getItemInOffHand().getAmount() + 1);
         }
+
         vil.setAI(true);
         setNewCooldown(vil);
     }

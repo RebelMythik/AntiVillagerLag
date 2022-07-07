@@ -12,6 +12,7 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
+import rebelmythik.antivillagerlag.api.colorcode;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +22,7 @@ public class TradeRestocks implements Listener {
     public AntiVillagerLag plugin;
     public long restock1;
     public long restock2;
+    colorcode colorcodes = new colorcode();
 
     public TradeRestocks(AntiVillagerLag plugin) {
         this.plugin = plugin;
@@ -54,6 +56,14 @@ public class TradeRestocks implements Listener {
         return time;
     }
 
+    public String replaceText(String text, String stuff2cut, String replacement) {
+        int index = text.indexOf(stuff2cut);
+        String text1 = text.substring(0, index);
+        String text2 = text.substring(index + stuff2cut.length(), text.length());
+        String finalText = text1 + replacement + text2;
+        return finalText;
+    }
+
     @EventHandler
     public void clickVillager(PlayerInteractEntityEvent e) {
         //is it the villager we want?
@@ -71,6 +81,7 @@ public class TradeRestocks implements Listener {
 
         //If he doesn't have a time, restock
         if (!hasTime(vil)) {
+            restock(vil);
             setNewTime(vil);
         }
         //if he does have a time, get it; also create time variables
@@ -84,17 +95,20 @@ public class TradeRestocks implements Listener {
                 if (vilTick <= restock2) {
                     restock(vil);
                     setNewTime(vil);
+                    return;
                 }
             } else if (curTick >= restock1) {
                 if (vilTick <= restock1) {
                     restock(vil);
                     setNewTime(vil);
+                    return;
                 }
             }
         } else {
             if (curTick >= restock1) {
                 restock(vil);
                 setNewTime(vil);
+                return;
             }
         }
         //check if he gets to see cool-down time

@@ -18,16 +18,16 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.api.colorcode;
 
 public class DisableVillagerAI implements Listener {
+
     public AntiVillagerLag plugin;
     long cooldown;
     colorcode colorcodes = new colorcode();
+    long currenttime = System.currentTimeMillis() / 1000;
 
     public DisableVillagerAI(AntiVillagerLag plugin) {
         this.plugin = plugin;
         cooldown = plugin.getConfig().getLong("cooldown");
     }
-
-    long currenttime = System.currentTimeMillis() / 1000;
 
     public void setNewCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
@@ -35,19 +35,26 @@ public class DisableVillagerAI implements Listener {
         currenttime = System.currentTimeMillis() / 1000;
         container.set(key, PersistentDataType.LONG, currenttime + cooldown);
     }
+
     public boolean hasCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "cooldown");
-        if (container.has(key, PersistentDataType.LONG)) {
-            return true;
-        }
-        return false;
+        return container.has(key, PersistentDataType.LONG);
     }
+
     public long getCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "cooldown");
         long time = container.get(key, PersistentDataType.LONG);
         return time;
+    }
+
+    public String replaceText(String text, String stuff2cut, String replacement) {
+        int index = text.indexOf(stuff2cut);
+        String text1 = text.substring(0, index);
+        String text2 = text.substring(index + stuff2cut.length(), text.length());
+        String finalText = text1 + replacement + text2;
+        return finalText;
     }
 
     @EventHandler
@@ -95,11 +102,13 @@ public class DisableVillagerAI implements Listener {
                 return;
             }
         }
+
         if (right) {
             inv.getItemInMainHand().setAmount(inv.getItemInMainHand().getAmount() + 1);
         } else {
             inv.getItemInOffHand().setAmount(inv.getItemInOffHand().getAmount() + 1);
         }
+
         vil.setAI(false);
         setNewCooldown(vil);
     }
