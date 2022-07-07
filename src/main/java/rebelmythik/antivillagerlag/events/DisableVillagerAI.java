@@ -29,7 +29,6 @@ public class DisableVillagerAI implements Listener {
 
     long currenttime = System.currentTimeMillis() / 1000;
 
-
     public void setNewCooldown(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "cooldown");
@@ -79,15 +78,22 @@ public class DisableVillagerAI implements Listener {
             right = false;
         }
         if (!item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
-        if (vilCooldown >= currenttime) {
-            String message = plugin.getConfig().getString("messages.cooldown-message");
-            int index = message.indexOf("%cooldown%");
-            String message1 = message.substring(0, index);
-            String message2 = message.substring(index + 10, message.length());
-            String finalMessage = message1 + Long.toString(vilCooldown - currenttime) + message2;
-            player.sendMessage(colorcodes.cm(finalMessage));
-            e.setCancelled(true);
-            return;
+
+        if (!player.hasPermission("avl.renamecooldown.bypass")) {
+            if (vilCooldown >= currenttime) {
+                Long totalseconds = vilCooldown - currenttime;
+                Long sec = totalseconds % 60;
+                Long min = (totalseconds - sec) / 60;
+
+                String message = plugin.getConfig().getString("messages.cooldown-message");
+                if (message.contains("%avlminutes%")) {
+                    message = replaceText(message, "%avlminutes%", Long.toString(min));
+                }
+                message = replaceText(message, "%avlseconds%", Long.toString(sec));
+                player.sendMessage(colorcodes.cm(message));
+                e.setCancelled(true);
+                return;
+            }
         }
         if (right) {
             inv.getItemInMainHand().setAmount(inv.getItemInMainHand().getAmount() + 1);

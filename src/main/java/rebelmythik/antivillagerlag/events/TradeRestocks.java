@@ -3,6 +3,7 @@ package rebelmythik.antivillagerlag.events;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +22,6 @@ public class TradeRestocks implements Listener {
     public long restock1;
     public long restock2;
 
-
     public TradeRestocks(AntiVillagerLag plugin) {
         this.plugin = plugin;
         restock1 = plugin.getConfig().getLong("RestockTimes.time1");
@@ -29,8 +29,8 @@ public class TradeRestocks implements Listener {
     }
 
     public void restock(Villager v) {
-        List<MerchantRecipe> recipes = v.getRecipes();
-        for (MerchantRecipe r : recipes) {
+        List < MerchantRecipe > recipes = v.getRecipes();
+        for (MerchantRecipe r: recipes) {
             r.setUses(0);
         }
     }
@@ -59,7 +59,13 @@ public class TradeRestocks implements Listener {
         //is it the villager we want?
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
         Villager vil = (Villager) e.getRightClicked();
-        if ((vil.getCustomName()!=null)&&(!vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))){
+        if ((vil.getCustomName() != null) && (!vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))) {
+            return;
+        }
+        Player player = e.getPlayer();
+        if (player.hasPermission("avl.restockcooldown.bypass")) {
+            restock(vil);
+            setNewTime(vil);
             return;
         }
 
@@ -90,6 +96,31 @@ public class TradeRestocks implements Listener {
                 restock(vil);
                 setNewTime(vil);
             }
+        }
+        //check if he gets to see cool-down time
+        if (player.hasPermission("avl.message.nextrestock")) {
+            long timeTillNextRestock;
+
+            if (curTick >= restock2) {
+                timeTillNextRestock = (24000 - curTick) + restock1;
+            } else if (curTick >= restock1) {
+                timeTillNextRestock = restock2 - curTick;
+            } else {
+                timeTillNextRestock = restock1 - curTick;
+            }
+
+            long totalsec = timeTillNextRestock / 20;
+            long sec = totalsec % 60;
+            long min = (totalsec - sec) / 60;
+            String message = plugin.getConfig().getString("messages.next-restock");
+
+            if (message.contains("%avlrestockmin%")) {
+                message = replaceText(message, "%avlrestockmin%", Long.toString(min));
+            }
+
+            message = replaceText(message, "%avlrestocksec%", Long.toString(sec));
+            player.sendMessage(colorcodes.cm(message));
+
         }
     }
 }

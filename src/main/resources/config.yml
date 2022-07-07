@@ -15,4 +15,6 @@ cooldown: 600
 messages:
   no-permission: "&cYou don't have permission to use this command."
   reload-message: "&aPlugin successfully reloaded."
-  cooldown-message: "You can rename the villager again in %cooldown% seconds."
+  cooldown-message: "You can rename the villager again in %avlminutes% minutes and %avlseconds% seconds."
+  next-restock: "The next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
+
