@@ -30,34 +30,6 @@ public class ReEnableVillagerAI implements Listener {
         cooldown = plugin.getConfig().getLong("cooldown");
     }
 
-    public void setNewCooldown(Villager v) {
-        PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "cooldown");
-        currenttime = System.currentTimeMillis() / 1000;
-        container.set(key, PersistentDataType.LONG, currenttime + cooldown);
-    }
-
-    public boolean hasCooldown(Villager v) {
-        PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "cooldown");
-        return container.has(key, PersistentDataType.LONG);
-    }
-
-    public long getCooldown(Villager v) {
-        PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "cooldown");
-        long time = container.get(key, PersistentDataType.LONG);
-        return time;
-    }
-
-    public String replaceText(String text, String stuff2cut, String replacement) {
-        int index = text.indexOf(stuff2cut);
-        String text1 = text.substring(0, index);
-        String text2 = text.substring(index + stuff2cut.length(), text.length());
-        String finalText = text1 + replacement + text2;
-        return finalText;
-    }
-
     @EventHandler
     public void RightClick(PlayerInteractEntityEvent e) {
         boolean right = true;
@@ -69,13 +41,14 @@ public class ReEnableVillagerAI implements Listener {
         ItemStack item;
         currenttime = System.currentTimeMillis() / 1000;
         //If he doesn't have a cooldown, add it?
-        if (!hasCooldown(vil)) {
-            setNewCooldown(vil);
+        if (!VilUtil.hasCooldown(vil, plugin)) {
+            VilUtil.setNewCooldown(vil, plugin, cooldown);
             return;
         }
 
-        long vilCooldown = getCooldown(vil);
-        //
+        long vilCooldown = VilUtil.getCooldown(vil, plugin);
+
+        if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
 
         if (e.getHand().equals(EquipmentSlot.HAND)) {
             if (!inv.getItemInMainHand().getType().equals(Material.NAME_TAG)) return;
@@ -95,19 +68,21 @@ public class ReEnableVillagerAI implements Listener {
 
                 String message = plugin.getConfig().getString("messages.cooldown-message");
                 if (message.contains("%avlminutes%")) {
-                    message = replaceText(message, "%avlminutes%", Long.toString(min));
+                    message = VilUtil.replaceText(message, "%avlminutes%", Long.toString(min));
                 }
-                message = replaceText(message, "%avlseconds%", Long.toString(sec));
+                message = VilUtil.replaceText(message, "%avlseconds%", Long.toString(sec));
                 player.sendMessage(colorcodes.cm(message));
                 e.setCancelled(true);
                 return;
             }
         }
 
-        if (right) {
-            inv.getItemInMainHand().setAmount(inv.getItemInMainHand().getAmount() + 1);
-        } else {
-            inv.getItemInOffHand().setAmount(inv.getItemInOffHand().getAmount() + 1);
+        if (!plugin.getConfig().getBoolean("toggleableoptions.usenametags")) {
+            if (right) {
+                inv.getItemInMainHand().setAmount(inv.getItemInMainHand().getAmount() + 1);
+            } else {
+                inv.getItemInOffHand().setAmount(inv.getItemInOffHand().getAmount() + 1);
+            }
         }
 
         vil.setAI(true);
