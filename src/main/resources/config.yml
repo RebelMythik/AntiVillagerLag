@@ -2,7 +2,7 @@
 NameThatDisables: 'Optimize'
 
 # This needs to be a valid block ID to work.
-BlockThatDisables: 'COBBLESTONE'
+BlockThatDisables: 'EMERALD_BLOCK'
 
 # Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
 # Time 2 must be bigger than time 1
@@ -24,7 +24,7 @@ toggleableoptions:
   userenaming: true
 
   # This will allow a block to disable and renable the Villager AI.
-  useblocks: true
+  useblocks: false
 
 messages:
   no-permission: "&cYou don't have permission to use this command."
