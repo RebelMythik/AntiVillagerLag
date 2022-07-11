@@ -15,13 +15,14 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
-import rebelmythik.antivillagerlag.api.colorcode;
+import rebelmythik.antivillagerlag.utils.ColorCode;
+import rebelmythik.antivillagerlag.utils.VilUtil;
 
 public class ReEnableVillagerAI implements Listener {
 
     public AntiVillagerLag plugin;
     long cooldown;
-    colorcode colorcodes = new colorcode();
+    ColorCode colorcodes = new ColorCode();
     long currenttime = System.currentTimeMillis() / 1000;
 
     public ReEnableVillagerAI(AntiVillagerLag plugin) {
@@ -110,6 +111,6 @@ public class ReEnableVillagerAI implements Listener {
         }
 
         vil.setAI(true);
-        setNewCooldown(vil);
+        VilUtil.setNewCooldown(vil, plugin, cooldown);
     }
 }

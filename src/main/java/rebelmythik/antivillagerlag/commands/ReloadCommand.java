@@ -4,16 +4,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
-import rebelmythik.antivillagerlag.api.colorcode;
+import rebelmythik.antivillagerlag.utils.ColorCode;
 
-public class reloadcommand implements CommandExecutor {
+public class ReloadCommand implements CommandExecutor {
     AntiVillagerLag plugin;
 
-    public reloadcommand(AntiVillagerLag plugin) {
+    public ReloadCommand(AntiVillagerLag plugin) {
         this.plugin = plugin;
     }
 
-    colorcode colorcodes = new colorcode();
+    ColorCode colorcodes = new ColorCode();
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("avlreload")) {

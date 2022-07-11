@@ -12,17 +12,16 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
-import rebelmythik.antivillagerlag.api.colorcode;
+import rebelmythik.antivillagerlag.utils.ColorCode;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class TradeRestocks implements Listener {
 
     public AntiVillagerLag plugin;
     public long restock1;
     public long restock2;
-    colorcode colorcodes = new colorcode();
+    ColorCode colorcodes = new ColorCode();
 
     public TradeRestocks(AntiVillagerLag plugin) {
         this.plugin = plugin;
@@ -85,7 +84,7 @@ public class TradeRestocks implements Listener {
             setNewTime(vil);
         }
         //if he does have a time, get it; also create time variables
-        World world = plugin.getServer().getWorld("world");
+        World world = vil.getWorld();
         long curTick = world.getTime();
         long vilTick = getTime(vil);
 

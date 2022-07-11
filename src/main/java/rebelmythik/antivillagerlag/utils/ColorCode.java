@@ -1,6 +1,6 @@
-package rebelmythik.antivillagerlag.api;
+package rebelmythik.antivillagerlag.utils;
 
-public class colorcode {
+public class ColorCode {
 
     public String cm(String s) {
 

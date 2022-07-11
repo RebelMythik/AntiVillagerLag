@@ -15,13 +15,14 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
-import rebelmythik.antivillagerlag.api.colorcode;
+import rebelmythik.antivillagerlag.utils.ColorCode;
+import rebelmythik.antivillagerlag.utils.VilUtil;
 
 public class DisableVillagerAI implements Listener {
 
     public AntiVillagerLag plugin;
     long cooldown;
-    colorcode colorcodes = new colorcode();
+    ColorCode colorcodes = new ColorCode();
     long currenttime = System.currentTimeMillis() / 1000;
 
     public DisableVillagerAI(AntiVillagerLag plugin) {
@@ -65,6 +66,7 @@ public class DisableVillagerAI implements Listener {
         PlayerInventory inv = player.getInventory();
         if (!(entity.getType().equals(EntityType.VILLAGER))) return;
         Villager vil = (Villager) entity;
+
         ItemStack item;
         currenttime = System.currentTimeMillis() / 1000;
         //If he doesn't have a cooldown, add it?
@@ -73,8 +75,9 @@ public class DisableVillagerAI implements Listener {
             return;
         }
 
-        long vilCooldown = getCooldown(vil);
-        //
+        long vilCooldown = VilUtil.getCooldown(vil, plugin);
+
+        if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
 
         if (e.getHand().equals(EquipmentSlot.HAND)) {
             if (!inv.getItemInMainHand().getType().equals(Material.NAME_TAG)) return;
@@ -110,6 +113,6 @@ public class DisableVillagerAI implements Listener {
         }
 
         vil.setAI(false);
-        setNewCooldown(vil);
+        VilUtil.setNewCooldown(vil, plugin, cooldown);
     }
 }
