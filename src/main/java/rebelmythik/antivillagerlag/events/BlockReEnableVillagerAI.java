@@ -9,7 +9,6 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.PlayerInventory;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VilUtil;
@@ -44,6 +43,7 @@ public class BlockReEnableVillagerAI implements Listener {
         long vilCooldown = VilUtil.getCooldown(vil, plugin);
 
         if (!plugin.getConfig().getBoolean("toggleableoptions.useblocks")) return;
+        if (vil.hasAI()) return;
 
         //replace with block logic
         if (vil.getName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
@@ -61,7 +61,6 @@ public class BlockReEnableVillagerAI implements Listener {
                 }
                 message = VilUtil.replaceText(message, "%avlseconds%", Long.toString(sec));
                 player.sendMessage(colorcodes.cm(message));
-                e.setCancelled(true);
                 return;
             }
         }
