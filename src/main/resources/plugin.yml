@@ -1,5 +1,5 @@
 name: AntiVillagerLag
-version: '1.0.4'
+version: '1.0.6'
 main: rebelmythik.antivillagerlag.AntiVillagerLag
 api-version: 1.18
 description: Helps with villager path finding

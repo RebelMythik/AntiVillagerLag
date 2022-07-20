@@ -30,7 +30,7 @@ public class VilUtil {
     public static String replaceText(String text, String stuff2cut, String replacement) {
         int index = text.indexOf(stuff2cut);
         String text1 = text.substring(0, index);
-        String text2 = text.substring(index + stuff2cut.length(), text.length());
+        String text2 = text.substring(index + stuff2cut.length());
         String finalText = text1 + replacement + text2;
         return finalText;
     }

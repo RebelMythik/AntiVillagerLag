@@ -23,13 +23,13 @@ public class BlockReEnableVillagerAI implements Listener {
 
     public BlockReEnableVillagerAI(AntiVillagerLag plugin) {
         this.plugin = plugin;
+        cooldown = plugin.getConfig().getLong("cooldown");
     }
 
     @EventHandler
     public void RightClick(PlayerInteractEntityEvent e) {
         Player player = e.getPlayer();
         Entity entity = e.getRightClicked();
-        PlayerInventory inv = player.getInventory();
         if (!(entity.getType().equals(EntityType.VILLAGER))) return;
         Villager vil = (Villager) entity;
         currenttime = System.currentTimeMillis() / 1000;
@@ -46,7 +46,8 @@ public class BlockReEnableVillagerAI implements Listener {
         if (!plugin.getConfig().getBoolean("toggleableoptions.useblocks")) return;
 
         //replace with block logic
-        if (vil.getWorld().getBlockAt((int)loc.getX(), (int)blocky, (int)loc.getZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")))) return;
+        if (vil.getName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
+        if (vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")))) return;
 
         if (!player.hasPermission("avl.renamecooldown.bypass")) {
             if (vilCooldown >= currenttime) {
@@ -54,7 +55,7 @@ public class BlockReEnableVillagerAI implements Listener {
                 Long sec = totalseconds % 60;
                 Long min = (totalseconds - sec) / 60;
 
-                String message = plugin.getConfig().getString("messages.cooldown-message");
+                String message = plugin.getConfig().getString("messages.cooldown-block-message");
                 if (message.contains("%avlminutes%")) {
                     message = VilUtil.replaceText(message, "%avlminutes%", Long.toString(min));
                 }

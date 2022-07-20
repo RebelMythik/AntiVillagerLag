@@ -1,7 +1,6 @@
 package rebelmythik.antivillagerlag.events;
 
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -58,7 +57,7 @@ public class TradeRestocks implements Listener {
     public String replaceText(String text, String stuff2cut, String replacement) {
         int index = text.indexOf(stuff2cut);
         String text1 = text.substring(0, index);
-        String text2 = text.substring(index + stuff2cut.length(), text.length());
+        String text2 = text.substring(index + stuff2cut.length());
         String finalText = text1 + replacement + text2;
         return finalText;
     }
@@ -68,7 +67,10 @@ public class TradeRestocks implements Listener {
         //is it the villager we want?
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
         Villager vil = (Villager) e.getRightClicked();
+        Location loc = vil.getLocation();
         if ((vil.getCustomName() != null) && (!vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))) {
+
+        } else if (!vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")))) {
             return;
         }
         Player player = e.getPlayer();
@@ -84,8 +86,8 @@ public class TradeRestocks implements Listener {
             setNewTime(vil);
         }
         //if he does have a time, get it; also create time variables
-        World world = vil.getWorld();
-        long curTick = world.getTime();
+
+        long curTick = vil.getWorld().getTime();
         long vilTick = getTime(vil);
 
         //Check if he should be restocked
