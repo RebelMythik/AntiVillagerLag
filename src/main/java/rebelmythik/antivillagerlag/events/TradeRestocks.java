@@ -38,7 +38,7 @@ public class TradeRestocks implements Listener {
     public void setNewTime(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "time");
-        container.set(key, PersistentDataType.LONG, plugin.getServer().getWorld("world").getTime());
+        container.set(key, PersistentDataType.LONG, v.getWorld().getTime());
     }
 
     public boolean hasTime(Villager v) {

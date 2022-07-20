@@ -33,7 +33,6 @@ public class BlockReEnableVillagerAI implements Listener {
         Villager vil = (Villager) entity;
         currenttime = System.currentTimeMillis() / 1000;
         Location loc = vil.getLocation();
-        double blocky =  loc.getY() - 1;
         //If he doesn't have a cooldown, add it?
         if (!VilUtil.hasCooldown(vil, plugin)) {
             VilUtil.setNewCooldown(vil, plugin, cooldown);
