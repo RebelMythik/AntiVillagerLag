@@ -98,7 +98,7 @@ public class TradeRestocks implements Listener {
         //if he does have a time, get it; also create time variables
 
         long curTick = vil.getWorld().getFullTime();
-        long currDayTimeTick = vil.getWorld().getFullTime();
+        long currDayTimeTick = vil.getWorld().getTime();
 
         // tick 0 of the current day
         long currentDayTick = curTick - currDayTimeTick;
