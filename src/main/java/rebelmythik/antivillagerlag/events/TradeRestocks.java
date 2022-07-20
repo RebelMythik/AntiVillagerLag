@@ -38,7 +38,7 @@ public class TradeRestocks implements Listener {
     public void setNewTime(Villager v) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "time");
-        container.set(key, PersistentDataType.LONG, v.getWorld().getTime());
+        container.set(key, PersistentDataType.LONG, v.getWorld().getFullTime());
     }
 
     public boolean hasTime(Villager v) {
@@ -93,44 +93,44 @@ public class TradeRestocks implements Listener {
         if (!hasTime(vil)) {
             restock(vil);
             setNewTime(vil);
+            return;
         }
         //if he does have a time, get it; also create time variables
 
-        long curTick = vil.getWorld().getTime();
+        long curTick = vil.getWorld().getFullTime();
+        long currDayTimeTick = vil.getWorld().getFullTime();
+
+        // tick 0 of the current day
+        long currentDayTick = curTick - currDayTimeTick;
+
+        long todayRestock1 = currentDayTick + restock1;
+        long todayRestock2 = currentDayTick + restock2;
+
         long vilTick = getTime(vil);
 
         //Check if he should be restocked
-        if (curTick >= vilTick) {
-            if (curTick >= restock2) {
-                if (vilTick <= restock2) {
-                    restock(vil);
-                    setNewTime(vil);
-                    return;
-                }
-            } else if (curTick >= restock1) {
-                if (vilTick <= restock1) {
-                    restock(vil);
-                    setNewTime(vil);
-                    return;
-                }
-            }
-        } else {
-            if (curTick >= restock1) {
-                restock(vil);
-                setNewTime(vil);
-                return;
-            }
+
+        if (curTick >= todayRestock1 && vilTick < todayRestock1) {
+            restock(vil);
+            setNewTime(vil);
+            return;
+        } else if (curTick >= todayRestock2 && vilTick < todayRestock2) {
+            restock(vil);
+            setNewTime(vil);
+            return;
         }
+
+
         //check if he gets to see cool-down time
         if (player.hasPermission("avl.message.nextrestock")) {
             long timeTillNextRestock;
 
-            if (curTick >= restock2) {
-                timeTillNextRestock = (24000 - curTick) + restock1;
-            } else if (curTick >= restock1) {
-                timeTillNextRestock = restock2 - curTick;
+            if (currDayTimeTick >= restock2) {
+                timeTillNextRestock = (24000 - currDayTimeTick) + restock1;
+            } else if (currDayTimeTick >= restock1) {
+                timeTillNextRestock = restock2 - currDayTimeTick;
             } else {
-                timeTillNextRestock = restock1 - curTick;
+                timeTillNextRestock = restock1 - currDayTimeTick;
             }
 
             long totalsec = timeTillNextRestock / 20;
