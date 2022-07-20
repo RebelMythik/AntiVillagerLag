@@ -62,17 +62,26 @@ public class TradeRestocks implements Listener {
         return finalText;
     }
 
+    public boolean isDisabled(Villager vil) {
+
+        Location loc = vil.getLocation();
+
+        // check if Villager is disabled with Nametag
+        if((vil.getCustomName() != null) && (vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))){
+            return true;
+        }
+        // else check if Villager is disabled with Block
+        return vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
+    }
+
     @EventHandler
     public void clickVillager(PlayerInteractEntityEvent e) {
         //is it the villager we want?
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
         Villager vil = (Villager) e.getRightClicked();
-        Location loc = vil.getLocation();
-        if ((vil.getCustomName() != null) && (!vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))) {
 
-        } else if (!vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")))) {
-            return;
-        }
+        if (!isDisabled(vil)) return;
+
         Player player = e.getPlayer();
         if (player.hasPermission("avl.restockcooldown.bypass")) {
             restock(vil);
