@@ -1,35 +1,24 @@
 package rebelmythik.antivillagerlag;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import rebelmythik.antivillagerlag.commands.ReloadCommand;
-import rebelmythik.antivillagerlag.events.*;
+import rebelmythik.antivillagerlag.events.NameTagAI;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
 
 public final class AntiVillagerLag extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.getServer().getPluginManager().registerEvents(new BlockDisableVillagerAI(this), this);
-        this.getServer().getPluginManager().registerEvents(new BlockReEnableVillagerAI(this), this);
-        this.getServer().getPluginManager().registerEvents(new DisableVillagerAI(this), this);
-        this.getServer().getPluginManager().registerEvents(new ReEnableVillagerAI(this), this);
-        this.getServer().getPluginManager().registerEvents(new TradeRestocks(this), this);
-        this.getServer().getPluginManager().registerEvents(new VilLevelGetter(this), this);
-        getCommand("avlreload").setExecutor(new ReloadCommand(this));
+        // Plugin startup logic
+        this.getServer().getPluginManager().registerEvents(new NameTagAI(this), this);
+
+
         saveDefaultConfig();
         updateConfig();
-
-        if (!getConfig().getBoolean("toggleableoptions.userenaming") && !getConfig().getBoolean("toggleableoptions.useblocks")) {
-            this.getLogger().log(Level.FINE, "You don't have Nametags or Blocks enabled for toggling villager AI. This plugin will do nothing. Disabling");
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
     }
 
     @Override

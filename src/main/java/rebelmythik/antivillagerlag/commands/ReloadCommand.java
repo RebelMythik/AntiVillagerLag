@@ -7,14 +7,13 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 
 public class ReloadCommand implements CommandExecutor {
+
     AntiVillagerLag plugin;
+    ColorCode colorcodes = new ColorCode();
 
     public ReloadCommand(AntiVillagerLag plugin) {
         this.plugin = plugin;
     }
-
-    ColorCode colorcodes = new ColorCode();
-
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("avlreload")) {
             if(!sender.hasPermission("avl.reload")) {
