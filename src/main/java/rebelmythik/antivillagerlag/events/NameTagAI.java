@@ -58,8 +58,10 @@ public class NameTagAI implements Listener {
             // Re-Enabling AI
             case "FALSE":
                 // Check if the Villager Name is not null and does not have the configured name
-                vil.getName();
-                if (vil.getName().equals(plugin.getConfig().getString("NameThatDisables"))) return;
+
+                if (item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
+
+
                 vil.setAI(true);
                 plugin.getLogger().info("AI has been Re-Enabled");
                 break;
