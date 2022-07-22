@@ -1,0 +1,35 @@
+# What the villager needs to be named to be disabled.
+NameThatDisables: 'Optimize'
+
+# This needs to be a valid block ID to work.
+BlockThatDisables: 'EMERALD_BLOCK'
+
+# Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
+# Time 2 must be bigger than time 1
+RestockTimes:
+  time1: 1000
+  time2: 13000
+
+# This time is in seconds. This cooldown for renaming is to prevent possible abuse
+# of people repeatedly disabling ai and re-enabling it to get double trades. I would keep this
+# at the minimum time of 10 minutes or 600 seconds due anything less allowing for the double trades to happen.
+cooldown: 600
+
+toggleableoptions:
+  # If set to true, nametags will be used instead of being infinite.
+  usenametags: false
+
+  # One of these following options needs to be true for the plugin to work.
+  # This will allow nametags to disable and renable the Villager AI.
+  userenaming: true
+
+  # This will allow a block to disable and renable the Villager AI.
+  useblocks: false
+
+messages:
+  no-permission: "&cYou don't have permission to use this command."
+  reload-message: "&aPlugin successfully reloaded."
+  cooldown-message: "&cYou can rename the villager again in %avlminutes% minutes and %avlseconds% seconds."
+  cooldown-block-message: "&cYou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
+  next-restock: "&cThe next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
+
