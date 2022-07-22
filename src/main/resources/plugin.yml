@@ -14,5 +14,7 @@ permissions:
     description: Allows the player to bypass the restock on renaming villagers
   avl.renamecooldown.bypass:
     description: Allows the player to bypass the cooldown on renaming villagers
+  avl.blockcooldown.bypass:
+    description: Allows the player to bypass the cooldown on renaming villagers
   avl.message.nextrestock:
     description: Tells the player when the villager is restocking next

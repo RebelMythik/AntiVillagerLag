@@ -4,7 +4,10 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import rebelmythik.antivillagerlag.events.BlockAI;
 import rebelmythik.antivillagerlag.events.NameTagAI;
+import rebelmythik.antivillagerlag.events.RestockVillager;
+import rebelmythik.antivillagerlag.events.VillagerLevelManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +17,10 @@ public final class AntiVillagerLag extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        this.getServer().getPluginManager().registerEvents(new BlockAI(this), this);
         this.getServer().getPluginManager().registerEvents(new NameTagAI(this), this);
-
-
+        this.getServer().getPluginManager().registerEvents(new RestockVillager(this), this);
+        this.getServer().getPluginManager().registerEvents(new VillagerLevelManager(this), this);
         saveDefaultConfig();
         updateConfig();
     }

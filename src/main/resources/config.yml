@@ -4,6 +4,11 @@ NameThatDisables: 'Optimize'
 # This needs to be a valid block ID to work.
 BlockThatDisables: 'EMERALD_BLOCK'
 
+UseableWorlds:
+  - 'world'
+  - 'world_nether'
+  - 'world_the_end'
+
 # Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
 # Time 2 must be bigger than time 1
 RestockTimes:

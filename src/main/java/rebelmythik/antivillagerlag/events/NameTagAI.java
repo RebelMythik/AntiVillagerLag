@@ -9,11 +9,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
+import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
 
 public class NameTagAI implements Listener {
     public AntiVillagerLag plugin;
+    ColorCode colorCodes = new ColorCode();
     long cooldown;
 
     public NameTagAI(AntiVillagerLag plugin) {
@@ -31,13 +33,21 @@ public class NameTagAI implements Listener {
         Entity entity = e.getRightClicked();
         ItemStack item = player.getInventory().getItemInMainHand();
         String hasAI = String.valueOf(((Villager) entity).hasAI()).toUpperCase();
-        long currenttime = System.currentTimeMillis() / 1000;
 
 
+        // Check that the entity is a villager and create time variables
         if (!(entity instanceof Villager)) return;
         Villager vil = (Villager) entity;
-        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
 
+        // Check whether this villager has a cooldown tag
+        if (!VillagerUtilities.hasCooldown(vil, plugin)) VillagerUtilities.setNewCooldown(vil, plugin, (long)0);
+        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
+        long currentTime = System.currentTimeMillis() / 1000;
+        Long totalSeconds = vilCooldown - currentTime;
+        Long sec = totalSeconds % 60;
+        Long min = (totalSeconds - sec) / 60;
+
+        // Check that the player uses a name-tag
         if (!item.getType().equals(Material.NAME_TAG)) return;
 
         if (!VillagerUtilities.hasCooldown(vil, plugin)) {
@@ -47,8 +57,7 @@ public class NameTagAI implements Listener {
         switch (hasAI) {
             // Disabling AI
             case "TRUE":
-                // Check if the Villager Name is null and does not have the configured name
-
+                // Check if the name-tag has the correct name for disabling
                 if (!item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
 
                 vil.setAI(false);
