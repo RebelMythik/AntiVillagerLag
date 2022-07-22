@@ -67,4 +67,29 @@ public class VillagerUtilities {
         long time = container.get(key, PersistentDataType.LONG);
         return time;
     }
+
+    public static void returnItem(Player player, AntiVillagerLag plugin) {
+        if (!plugin.getConfig().getBoolean("toggleableoptions.usenametags")) {
+            player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
+            plugin.getLogger().info("Gave nametag");
+        }
+    }
+    public static boolean workInWorld(AntiVillagerLag plugin) {
+
+        List<String> availableWorlds = plugin.getConfig().getStringList("UseableWorlds");
+        return false;
+    }
+    public static boolean isDisabled(Villager vil, AntiVillagerLag plugin) {
+
+        Location loc = vil.getLocation();
+
+        // check if Villager is disabled with Nametag
+        if((vil.getCustomName() != null) && (vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))){
+            return true;
+        }
+        // else check if Villager is disabled with Block
+        return vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
+    }
+
+
 }

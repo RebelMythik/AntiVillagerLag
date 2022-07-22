@@ -26,8 +26,8 @@ public class NameTagAI implements Listener {
 
     @EventHandler
     public void rightClick(PlayerInteractEntityEvent e) {
-        // Toggle Option To Disable this Class
 
+        // Toggle Option To Disable this Class
         if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
         Player player = e.getPlayer();
         Entity entity = e.getRightClicked();
@@ -50,28 +50,41 @@ public class NameTagAI implements Listener {
         // Check that the player uses a name-tag
         if (!item.getType().equals(Material.NAME_TAG)) return;
 
-        if (!VillagerUtilities.hasCooldown(vil, plugin)) {
-            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+        // Permissions to Bypass Cooldown. If they don't have permission run to see if the cooldown is over and send message if it isn't
+        if (!player.hasPermission("avl.renamecooldown.bypass")) {
+            if (vilCooldown >= currentTime) {
+                String message = plugin.getConfig().getString("messages.cooldown-message");
+                if (message.contains("%avlminutes%")) {
+                    message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
+                }
+                message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
+                player.sendMessage(colorCodes.cm(message));
+                e.setCancelled(true);
+                return;
+            }
         }
 
+        // Replenish the name-tag and handle the correct AI state
+        VillagerUtilities.returnItem(player, plugin);
         switch (hasAI) {
             // Disabling AI
             case "TRUE":
                 // Check if the name-tag has the correct name for disabling
                 if (!item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
 
+
                 vil.setAI(false);
+                VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
                 plugin.getLogger().info("AI has been Disabled");
                 break;
 
             // Re-Enabling AI
             case "FALSE":
-                // Check if the Villager Name is not null and does not have the configured name
-
+                // Check if the name-tag has the correct name for re-enabling
                 if (item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
 
-
                 vil.setAI(true);
+                VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
                 plugin.getLogger().info("AI has been Re-Enabled");
                 break;
         }
