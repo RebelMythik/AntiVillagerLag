@@ -53,12 +53,14 @@ public class RestockVillager implements Listener {
             VillagerUtilities.setNewTime(plugin, vil);
             return;
         }
+
         //If he doesn't have a time, restock
         if (!VillagerUtilities.hasTime(plugin, vil)) {
             restock(vil);
             VillagerUtilities.setNewTime(plugin, vil);
             return;
         }
+
         long vilTick = VillagerUtilities.getTime(plugin, vil);
         //Check if he should be restocked
         if (curTick >= todayRestock1 && vilTick < todayRestock1) {
@@ -70,6 +72,7 @@ public class RestockVillager implements Listener {
             VillagerUtilities.setNewTime(plugin, vil);
             return;
         }
+
         //check if he gets to see cool-down time
         if (player.hasPermission("avl.message.nextrestock")) {
             long timeTillNextRestock;
