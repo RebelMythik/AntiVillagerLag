@@ -4,11 +4,6 @@ NameThatDisables: 'Optimize'
 # This needs to be a valid block ID to work.
 BlockThatDisables: 'EMERALD_BLOCK'
 
-UseableWorlds:
-  - 'world'
-  - 'world_nether'
-  - 'world_the_end'
-
 # Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
 # Time 2 must be bigger than time 1
 RestockTimes:
@@ -36,5 +31,6 @@ messages:
   reload-message: "&aPlugin successfully reloaded."
   cooldown-message: "&cYou can rename the villager again in %avlminutes% minutes and %avlseconds% seconds."
   cooldown-block-message: "&cYou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
+  cooldown-levelup-message: "&cThe villager is currently leveling up! You can use the villager again in %avlseconds% seconds."
   next-restock: "&cThe next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
 

@@ -1,9 +1,13 @@
 package rebelmythik.antivillagerlag;
 
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.MultiLineChart;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import rebelmythik.antivillagerlag.commands.ReloadCommand;
 import rebelmythik.antivillagerlag.events.BlockAI;
 import rebelmythik.antivillagerlag.events.NameTagAI;
 import rebelmythik.antivillagerlag.events.RestockVillager;
@@ -11,6 +15,9 @@ import rebelmythik.antivillagerlag.events.VillagerLevelManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public final class AntiVillagerLag extends JavaPlugin {
 
@@ -21,9 +28,22 @@ public final class AntiVillagerLag extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new NameTagAI(this), this);
         this.getServer().getPluginManager().registerEvents(new RestockVillager(this), this);
         this.getServer().getPluginManager().registerEvents(new VillagerLevelManager(this), this);
+        getCommand("avlreload").setExecutor(new ReloadCommand(this));
         saveDefaultConfig();
         updateConfig();
+
+        int pluginId = 15890;
+        Metrics metrics = new Metrics(this, pluginId);
+
+        // Optional: Add custom charts
+        metrics.addCustomChart(new MultiLineChart("players_and_servers", () -> {
+            Map<String, Integer> valueMap = new HashMap<>();
+            valueMap.put("servers", 1);
+            valueMap.put("players", Bukkit.getOnlinePlayers().size());
+            return valueMap;
+        }));
     }
+
 
     @Override
     public void onDisable() {
