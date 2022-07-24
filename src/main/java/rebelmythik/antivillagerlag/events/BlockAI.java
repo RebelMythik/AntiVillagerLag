@@ -54,7 +54,6 @@ public class BlockAI implements Listener {
                 }
                 message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
                 player.sendMessage(colorCodes.cm(message));
-                e.setCancelled(true);
                 return;
             }
         }

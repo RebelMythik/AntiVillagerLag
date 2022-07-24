@@ -26,7 +26,6 @@ public class RestockVillager implements Listener {
         restock1 = plugin.getConfig().getLong("RestockTimes.time1");
         restock2 = plugin.getConfig().getLong("RestockTimes.time2");
     }
-
     public void restock(Villager v) {
         List<MerchantRecipe> recipes = v.getRecipes();
         for (MerchantRecipe r: recipes) {

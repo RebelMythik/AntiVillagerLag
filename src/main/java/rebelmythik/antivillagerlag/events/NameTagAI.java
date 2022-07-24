@@ -22,8 +22,6 @@ public class NameTagAI implements Listener {
         this.plugin = plugin;
         cooldown = plugin.getConfig().getLong("cooldown");
     }
-
-
     @EventHandler
     public void rightClick(PlayerInteractEntityEvent e) {
 
@@ -62,7 +60,6 @@ public class NameTagAI implements Listener {
                 }
                 message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
                 player.sendMessage(colorCodes.cm(message));
-                e.setCancelled(true);
                 return;
             }
         }

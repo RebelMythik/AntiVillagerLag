@@ -21,7 +21,6 @@ public class VillagerLevelManager implements Listener {
         this.plugin = plugin;
         cooldown = 5;
     }
-
     @EventHandler
     public void levelChanger(PlayerInteractEntityEvent e) {
         Entity entity = e.getRightClicked();
@@ -32,6 +31,7 @@ public class VillagerLevelManager implements Listener {
         long newLevel = CalculateLevel.villagerEXP(vil);
         long currentTime = System.currentTimeMillis() / 1000;
 
+        if (!VillagerUtilities.isDisabled(vil, plugin)) return;
         if (!VillagerUtilities.hasLevelCooldown(vil, plugin)) VillagerUtilities.setLevelCooldown(vil, plugin, (long)0);
 
         long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
@@ -52,7 +52,6 @@ public class VillagerLevelManager implements Listener {
             VillagerUtilities.setLevelCooldown(vil, plugin, cooldown);
             vil.setAI(true);
         } else return;
-
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             vil.setAI(false);

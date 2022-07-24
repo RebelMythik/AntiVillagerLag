@@ -3,7 +3,6 @@ package rebelmythik.antivillagerlag.utils;
 import org.bukkit.entity.Villager;
 
 public class CalculateLevel {
-
     public static long villagerEXP (Villager vil) {
         int vilEXP = vil.getVillagerExperience();
         int vilLVL = vil.getVillagerLevel();
@@ -31,8 +30,6 @@ public class CalculateLevel {
         if (vilLVL == 4 && vilEXP >= 250) return 5;
 
         if (vilLVL == 5 && vilEXP >= 250) return 5;
-
-
 
         return 0;
     }
