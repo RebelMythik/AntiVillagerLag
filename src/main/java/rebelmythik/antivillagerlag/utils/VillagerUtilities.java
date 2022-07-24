@@ -42,17 +42,19 @@ public class VillagerUtilities {
             r.setUses(0);
         }
     }
-    public static void setNewTime(AntiVillagerLag plugin, Villager v) {
+    public static void setNewTime(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "time");
-        container.set(key, PersistentDataType.LONG, v.getWorld().getTime());
+        container.set(key, PersistentDataType.LONG, v.getWorld().getFullTime());
     }
-    public static boolean hasTime(AntiVillagerLag plugin, Villager v) {
+
+    public static boolean hasTime(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "time");
         return (container.has(key, PersistentDataType.LONG));
     }
-    public static long getTime(AntiVillagerLag plugin, Villager v) {
+
+    public static long getTime(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "time");
         long time = container.get(key, PersistentDataType.LONG);

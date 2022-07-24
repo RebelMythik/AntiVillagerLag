@@ -49,7 +49,7 @@ public class RestockVillager implements Listener {
         //Permission to Bypass restock cooldown
         if (player.hasPermission("avl.restockcooldown.bypass")) {
             restock(vil);
-            VillagerUtilities.setNewTime(plugin, vil);
+            VillagerUtilities.setNewTime(vil, plugin);
             return;
         }
 
@@ -60,15 +60,15 @@ public class RestockVillager implements Listener {
             return;
         }
 
-        long vilTick = VillagerUtilities.getTime(plugin, vil);
+        long vilTick = VillagerUtilities.getTime(vil, plugin);
         //Check if he should be restocked
         if (curTick >= todayRestock1 && vilTick < todayRestock1) {
             restock(vil);
-            VillagerUtilities.setNewTime(plugin, vil);
+            VillagerUtilities.setNewTime(vil, plugin);
             return;
         } else if (curTick >= todayRestock2 && vilTick < todayRestock2) {
             restock(vil);
-            VillagerUtilities.setNewTime(plugin, vil);
+            VillagerUtilities.setNewTime(vil, plugin);
             return;
         }
 
