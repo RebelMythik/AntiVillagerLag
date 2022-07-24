@@ -1,5 +1,6 @@
 package rebelmythik.antivillagerlag.utils;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
