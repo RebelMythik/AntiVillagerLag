@@ -5,7 +5,7 @@ NameThatDisables: 'Optimize'
 BlockThatDisables: 'EMERALD_BLOCK'
 
 # Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
-# Time 2 must be bigger than time 1
+# See https://minecraft.fandom.com/wiki/Daylight_cycle for more info
 RestockTimes:
   time1: 1000
   time2: 13000
