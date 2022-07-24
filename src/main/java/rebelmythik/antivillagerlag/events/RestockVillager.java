@@ -54,9 +54,9 @@ public class RestockVillager implements Listener {
         }
 
         //If he doesn't have a time, restock
-        if (!VillagerUtilities.hasTime(plugin, vil)) {
+        if (!VillagerUtilities.hasTime(vil, plugin)) {
             restock(vil);
-            VillagerUtilities.setNewTime(plugin, vil);
+            VillagerUtilities.setNewTime(vil, plugin);
             return;
         }
 
