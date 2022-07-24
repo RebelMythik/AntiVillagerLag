@@ -61,7 +61,8 @@ public class VillagerUtilities {
         return time;
     }
     public static void returnItem(Player player, AntiVillagerLag plugin) {
-        if (!plugin.getConfig().getBoolean("toggleableoptions.usenametags")) {
+        // check if giving nametag is toggled and if player is not in creative
+        if (!plugin.getConfig().getBoolean("toggleableoptions.usenametags") && player.getGameMode() != GameMode.CREATIVE) {
             player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
         }
     }
