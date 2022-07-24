@@ -30,11 +30,11 @@ public class NameTagAI implements Listener {
         Player player = e.getPlayer();
         Entity entity = e.getRightClicked();
         ItemStack item = player.getInventory().getItemInMainHand();
-        String hasAI = String.valueOf(((Villager) entity).hasAI()).toUpperCase();
 
 
         // Check that the entity is a villager and create time variables
         if (!(entity instanceof Villager)) return;
+        String hasAI = String.valueOf(((Villager) entity).hasAI()).toUpperCase();
         Villager vil = (Villager) entity;
 
         // Check whether this villager has a cooldown tag

@@ -28,10 +28,10 @@ public class BlockAI implements Listener {
         if (!plugin.getConfig().getBoolean("toggleableoptions.useblocks")) return;
         Player player = e.getPlayer();
         Entity entity = e.getRightClicked();
-        String hasAI = String.valueOf(((Villager) entity).hasAI()).toUpperCase();
 
         // Check that the entity is a villager and create time variables
         if (!(entity instanceof Villager)) return;
+        String hasAI = String.valueOf(((Villager) entity).hasAI()).toUpperCase();
         Villager vil = (Villager) entity;
         Location loc = vil.getLocation();
 
