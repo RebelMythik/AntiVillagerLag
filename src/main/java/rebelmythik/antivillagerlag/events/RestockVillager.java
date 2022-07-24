@@ -6,7 +6,6 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.MerchantRecipe;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
@@ -14,6 +13,7 @@ import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 import java.util.List;
 
 import static rebelmythik.antivillagerlag.utils.VillagerUtilities.replaceText;
+import static rebelmythik.antivillagerlag.utils.VillagerUtilities.restock;
 
 public class RestockVillager implements Listener {
     public AntiVillagerLag plugin;
@@ -26,12 +26,7 @@ public class RestockVillager implements Listener {
         restock1 = plugin.getConfig().getLong("RestockTimes.time1");
         restock2 = plugin.getConfig().getLong("RestockTimes.time2");
     }
-    public void restock(Villager v) {
-        List<MerchantRecipe> recipes = v.getRecipes();
-        for (MerchantRecipe r: recipes) {
-            r.setUses(0);
-        }
-    }
+
     @EventHandler
     public void clickVillager(PlayerInteractEntityEvent e) {
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;

@@ -53,7 +53,7 @@ public class NameTagAI implements Listener {
 
         // Permissions to Bypass Cooldown. If they don't have permission run to see if the cooldown is over and send message if it isn't
         if (!player.hasPermission("avl.renamecooldown.bypass")) {
-            if (vilCooldown >= currentTime) {
+            if (vilCooldown > currentTime) {
                 String message = plugin.getConfig().getString("messages.cooldown-message");
                 if (message.contains("%avlminutes%")) {
                     message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
@@ -65,10 +65,7 @@ public class NameTagAI implements Listener {
         }
 
         // Check if the villager is disabled for leveling
-        if (vilLevelCooldown >= currentTime) {
-            String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
-            message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-            player.sendMessage(colorCodes.cm(message));
+        if (vilLevelCooldown > currentTime) {
             e.setCancelled(true);
             return;
         }

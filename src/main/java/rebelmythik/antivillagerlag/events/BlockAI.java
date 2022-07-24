@@ -59,10 +59,7 @@ public class BlockAI implements Listener {
         }
 
         // Check if the villager is disabled for leveling
-        if (vilLevelCooldown >= currentTime) {
-            String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
-            message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-            player.sendMessage(colorCodes.cm(message));
+        if (vilLevelCooldown > currentTime) {
             e.setCancelled(true);
             return;
         }
