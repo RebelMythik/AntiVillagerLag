@@ -38,7 +38,7 @@ public class VillagerLevelManager implements Listener {
         Long totalSeconds = vilLevelCooldown - currentTime;
         Long sec = totalSeconds % 60;
 
-        if (vilLevelCooldown >= currentTime) {
+        if (vilLevelCooldown > currentTime) {
             String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
             message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
             player.sendMessage(colorCodes.cm(message));

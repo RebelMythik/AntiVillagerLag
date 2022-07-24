@@ -47,8 +47,8 @@ public class BlockAI implements Listener {
 
         // Permissions to Bypass Cooldown. If they don't have permission run to see if the cooldown is over and send message if it isn't
         if (!player.hasPermission("avl.blockcooldown.bypass")) {
-            if (vilCooldown >= currentTime) {
-                String message = plugin.getConfig().getString("cooldown-block-message");
+            if (vilCooldown > currentTime) {
+                String message = plugin.getConfig().getString("messages.cooldown-block-message");
                 if (message.contains("%avlminutes%")) {
                     message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
                 }
