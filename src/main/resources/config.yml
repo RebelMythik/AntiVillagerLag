@@ -2,7 +2,8 @@
 NameThatDisables: 'Optimize'
 
 # This needs to be a valid block ID to work.
-BlockThatDisables: 'EMERALD_BLOCK'
+BlockThatDisables:
+  - 'EMERALD_BLOCK'
 
 # Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
 # See https://minecraft.fandom.com/wiki/Daylight_cycle for more info

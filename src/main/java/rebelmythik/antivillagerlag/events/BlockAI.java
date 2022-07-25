@@ -12,14 +12,19 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlockAI implements Listener {
     public AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
     long cooldown;
+    final List<String> blocks;
 
     public BlockAI(AntiVillagerLag plugin) {
         this.plugin = plugin;
         cooldown = plugin.getConfig().getLong("cooldown");
+        this.blocks = plugin.getConfig().getStringList("BlockThatDisables");
     }
 
     @EventHandler
@@ -69,7 +74,7 @@ public class BlockAI implements Listener {
             // Disabling AI
             case "TRUE":
                 // Check that the villager is on the correct block
-                if (!vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")))) return;
+                if (!blocks.contains(vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().toString())) return;
                 VillagerUtilities.setMarker(vil, plugin);
 
                 vil.setAI(false);
@@ -79,7 +84,7 @@ public class BlockAI implements Listener {
             // Re-Enabling AI
             case "FALSE":
                 // Check that the villager is on the correct block
-                if (vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")))) return;
+                if (blocks.contains(vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().toString())) return;
                 if (!VillagerUtilities.hasMarker(vil, plugin)) return;
 
                 vil.setAI(true);
