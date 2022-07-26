@@ -1,52 +1,40 @@
 package rebelmythik.antivillagerlag.events;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
 
-public class NameTagAI implements Listener {
+public class NameTagAI {
     public AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
     long cooldown;
 
     public NameTagAI(AntiVillagerLag plugin) {
         this.plugin = plugin;
-        cooldown = plugin.getConfig().getLong("cooldown");
+        this.cooldown = plugin.getConfig().getLong("cooldown");
     }
-    @EventHandler
-    public void rightClick(PlayerInteractEntityEvent e) {
+
+    public void call(Villager vil, Player player) {
 
         // Toggle Option To Disable this Class
         if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
-        Player player = e.getPlayer();
-        Entity entity = e.getRightClicked();
         ItemStack item = player.getInventory().getItemInMainHand();
 
 
-        // Check that the entity is a villager and create time variables
-        if (!(entity instanceof Villager)) return;
-        String hasAI = String.valueOf(((Villager) entity).hasAI()).toUpperCase();
-        Villager vil = (Villager) entity;
+        // create variables
+        String hasAI = String.valueOf(vil.hasAI()).toUpperCase();
 
-        // Check whether this villager has a cooldown tag
-        if (!VillagerUtilities.hasCooldown(vil, plugin)) VillagerUtilities.setNewCooldown(vil, plugin, (long)0);
-        if (!VillagerUtilities.hasLevelCooldown(vil, plugin)) VillagerUtilities.setLevelCooldown(vil, plugin, (long)0);
         long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
 
         long currentTime = System.currentTimeMillis() / 1000;
-        Long totalSeconds = vilCooldown - currentTime;
-        Long sec = totalSeconds % 60;
-        Long min = (totalSeconds - sec) / 60;
-        long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
+        long totalSeconds = vilCooldown - currentTime;
+        long sec = totalSeconds % 60;
+        long min = (totalSeconds - sec) / 60;
 
         // Check that the player uses a name-tag
         if (!item.getType().equals(Material.NAME_TAG)) return;
@@ -62,12 +50,6 @@ public class NameTagAI implements Listener {
                 player.sendMessage(colorCodes.cm(message));
                 return;
             }
-        }
-
-        // Check if the villager is disabled for leveling
-        if (vilLevelCooldown > currentTime) {
-            e.setCancelled(true);
-            return;
         }
 
         // Replenish the name-tag and handle the correct AI state

@@ -1,21 +1,16 @@
 package rebelmythik.antivillagerlag.events;
 
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
-import java.util.List;
 
 import static rebelmythik.antivillagerlag.utils.VillagerUtilities.replaceText;
 import static rebelmythik.antivillagerlag.utils.VillagerUtilities.restock;
 
-public class RestockVillager implements Listener {
+public class RestockVillager {
     public AntiVillagerLag plugin;
     public long restock1;
     public long restock2;
@@ -23,23 +18,18 @@ public class RestockVillager implements Listener {
 
     public RestockVillager(AntiVillagerLag plugin) {
         this.plugin = plugin;
-        restock1 = plugin.getConfig().getLong("RestockTimes.time1");
-        restock2 = plugin.getConfig().getLong("RestockTimes.time2");
+        this.restock1 = plugin.getConfig().getLong("RestockTimes.time1");
+        this.restock2 = plugin.getConfig().getLong("RestockTimes.time2");
     }
 
-    @EventHandler
-    public void clickVillager(PlayerInteractEntityEvent e) {
-        if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
-        Villager vil = (Villager) e.getRightClicked();
+    public void call(Villager vil, Player player) {
+
         long curTick = vil.getWorld().getFullTime();
         long currDayTimeTick = vil.getWorld().getTime();
         long currentDayTick = curTick - currDayTimeTick;
         long todayRestock1 = currentDayTick + restock1;
         long todayRestock2 = currentDayTick + restock2;
-        Player player = e.getPlayer();
 
-        // Check if villager is disabled
-        if (!VillagerUtilities.isDisabled(vil, plugin)) return;
 
         //Permission to Bypass restock cooldown
         if (player.hasPermission("avl.restockcooldown.bypass")) {
