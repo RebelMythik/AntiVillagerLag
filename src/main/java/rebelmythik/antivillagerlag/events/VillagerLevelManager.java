@@ -9,7 +9,7 @@ import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
 public class VillagerLevelManager {
-    private AntiVillagerLag plugin;
+    private final AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
     long cooldown;
     public VillagerLevelManager(AntiVillagerLag plugin) {

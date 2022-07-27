@@ -11,7 +11,7 @@ import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 import java.util.Locale;
 
 public class BlockAI {
-    private AntiVillagerLag plugin;
+    private final AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
     long cooldown;
 
@@ -23,8 +23,6 @@ public class BlockAI {
     public void call(Villager vil, Player player) {
 
         // create variables
-        String hasAI = String.valueOf(vil.hasAI()).toUpperCase(Locale.ENGLISH);
-
         long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
 
         long currentTime = System.currentTimeMillis() / 1000;
@@ -47,7 +45,7 @@ public class BlockAI {
         }
 
         // Handle the correct AI state
-        VillagerUtilities.handleAiState(hasAI, vil, this.plugin);
+        VillagerUtilities.handleAiState(vil, this.plugin);
 
         VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
     }

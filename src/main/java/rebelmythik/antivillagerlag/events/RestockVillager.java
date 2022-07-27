@@ -11,9 +11,9 @@ import static rebelmythik.antivillagerlag.utils.VillagerUtilities.replaceText;
 import static rebelmythik.antivillagerlag.utils.VillagerUtilities.restock;
 
 public class RestockVillager {
-    public AntiVillagerLag plugin;
-    private long restock1;
-    private long restock2;
+    private final AntiVillagerLag plugin;
+    private final long restock1;
+    private final long restock2;
     ColorCode colorCodes = new ColorCode();
 
     public RestockVillager(AntiVillagerLag plugin) {

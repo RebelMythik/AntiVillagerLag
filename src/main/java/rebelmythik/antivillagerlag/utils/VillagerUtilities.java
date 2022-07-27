@@ -104,28 +104,23 @@ public class VillagerUtilities {
         return container.has(key, PersistentDataType.STRING);
     }
 
-    public static void handleAiState(String hasAI, Villager vil, AntiVillagerLag plugin){
+    public static void handleAiState(Villager vil, AntiVillagerLag plugin){
+
         boolean disabled = isDisabled(vil, plugin);
-        switch (hasAI) {
-            // Disabling AI
-            case "TRUE":
-                // Check that the villager is disabled
-                if (!disabled)
-                    return;
 
-                VillagerUtilities.setMarker(vil, plugin);
-                vil.setAI(false);
-                break;
-
+        if(vil.hasAI()) {
+            // Check that the villager is disabled
+            if (!disabled)
+                return;
+            VillagerUtilities.setMarker(vil, plugin);
+            vil.setAI(false);
+        } else {
             // Re-Enabling AI
-            case "FALSE":
-                // Check that the villager is disabled
-                if (disabled)
-                    return;
-
-                if (!VillagerUtilities.hasMarker(vil, plugin)) return;
-                vil.setAI(true);
-                break;
+            // Check that the villager is disabled
+            if (disabled)
+                return;
+            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+            vil.setAI(true);
         }
     }
 }

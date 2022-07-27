@@ -12,9 +12,9 @@ import java.util.Locale;
 
 
 public class NameTagAI {
-    private AntiVillagerLag plugin;
+    private final AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
-    long cooldown;
+    private final long cooldown;
 
     public NameTagAI(AntiVillagerLag plugin) {
         this.plugin = plugin;
@@ -27,12 +27,8 @@ public class NameTagAI {
         if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
         ItemStack item = player.getInventory().getItemInMainHand();
 
-
         // create variables
-        String hasAI = String.valueOf(vil.hasAI()).toUpperCase(Locale.ENGLISH);
-
         long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
-
         long currentTime = System.currentTimeMillis() / 1000;
         long totalSeconds = vilCooldown - currentTime;
         long sec = totalSeconds % 60;
@@ -59,8 +55,7 @@ public class NameTagAI {
         VillagerUtilities.returnItem(player, plugin);
 
         // Handle the correct AI state
-        VillagerUtilities.handleAiState(hasAI, vil, this.plugin);
-
+        VillagerUtilities.handleAiState(vil, this.plugin);
         VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
     }
 }
