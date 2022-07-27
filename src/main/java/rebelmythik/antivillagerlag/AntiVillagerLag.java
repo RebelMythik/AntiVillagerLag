@@ -8,7 +8,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import rebelmythik.antivillagerlag.commands.ReloadCommand;
-import rebelmythik.antivillagerlag.events.*;
+import rebelmythik.antivillagerlag.events.EventListenerHandler;
 
 import java.io.File;
 import java.io.IOException;

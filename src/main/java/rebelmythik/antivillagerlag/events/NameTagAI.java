@@ -19,11 +19,34 @@ public class NameTagAI {
         this.cooldown = plugin.getConfig().getLong("cooldown");
     }
 
+    public static void handleAiState(Villager vil, AntiVillagerLag plugin, boolean willBeDisabled){
+
+
+        if(vil.hasAI()) {
+            // Check that the villager is disabled
+            if (!willBeDisabled)
+                return;
+            VillagerUtilities.setMarker(vil, plugin);
+            vil.setAI(false);
+        } else {
+            // Re-Enabling AI
+            // Check that the villager is disabled
+            if (willBeDisabled)
+                return;
+            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+            vil.setAI(true);
+        }
+    }
+
     public void call(Villager vil, Player player) {
 
         // Toggle Option To Disable this Class
         if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
         ItemStack item = player.getInventory().getItemInMainHand();
+
+        // Check that the player uses a named name-tag
+        if (!item.getType().equals(Material.NAME_TAG) || !item.getItemMeta().hasDisplayName())
+            return;
 
         // create variables
         long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
@@ -32,9 +55,6 @@ public class NameTagAI {
         long sec = totalSeconds % 60;
         long min = (totalSeconds - sec) / 60;
 
-        // Check that the player uses a named name-tag
-        if (!item.getType().equals(Material.NAME_TAG) || !item.getItemMeta().hasDisplayName())
-            return;
 
         // Permissions to Bypass Cooldown. If they don't have permission run to see
         // if the cooldown is over and send message if it isn't
@@ -53,9 +73,10 @@ public class NameTagAI {
         // Replenish the name-tag and handle the correct AI state
         VillagerUtilities.returnItem(player, plugin);
 
-        boolean will_be_disabled = item.getItemMeta().getDisplayName().equals(plugin.getConfig().getString("NameThatDisables"));
+        boolean willBeDisabled = item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"));
+
         // Handle the correct AI state
-        VillagerUtilities.handleAiState(vil, this.plugin, will_be_disabled);
+        handleAiState(vil, this.plugin, willBeDisabled);
         VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
     }
 }
