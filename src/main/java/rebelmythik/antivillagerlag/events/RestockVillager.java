@@ -1,45 +1,65 @@
 package rebelmythik.antivillagerlag.events;
 
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
-import java.util.List;
 
 import static rebelmythik.antivillagerlag.utils.VillagerUtilities.replaceText;
 import static rebelmythik.antivillagerlag.utils.VillagerUtilities.restock;
 
-public class RestockVillager implements Listener {
-    public AntiVillagerLag plugin;
-    public long restock1;
-    public long restock2;
+public class RestockVillager {
+    private final AntiVillagerLag plugin;
+    private final long restock1;
+    private final long restock2;
     ColorCode colorCodes = new ColorCode();
 
     public RestockVillager(AntiVillagerLag plugin) {
         this.plugin = plugin;
-        restock1 = plugin.getConfig().getLong("RestockTimes.time1");
-        restock2 = plugin.getConfig().getLong("RestockTimes.time2");
+        this.restock1 = plugin.getConfig().getLong("RestockTimes.time1");
+        this.restock2 = plugin.getConfig().getLong("RestockTimes.time2");
     }
 
-    @EventHandler
-    public void clickVillager(PlayerInteractEntityEvent e) {
-        if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
-        Villager vil = (Villager) e.getRightClicked();
+    public void restockMessage(long timeTillNextRestock, Player player){
+
+        long totalsec = timeTillNextRestock / 20;
+        long sec = totalsec % 60;
+        long min = (totalsec - sec) / 60;
+        String message = plugin.getConfig().getString("messages.next-restock");
+
+        if (message.contains("%avlrestockmin%")) {
+            message = replaceText(message, "%avlrestockmin%", Long.toString(min));
+        }
+        message = replaceText(message, "%avlrestocksec%", Long.toString(sec));
+        player.sendMessage(colorCodes.cm(message));
+    }
+
+    public boolean handleRestock(Villager vil, long currDayTimeTick, AntiVillagerLag plugin){
+
         long curTick = vil.getWorld().getFullTime();
-        long currDayTimeTick = vil.getWorld().getTime();
         long currentDayTick = curTick - currDayTimeTick;
         long todayRestock1 = currentDayTick + restock1;
         long todayRestock2 = currentDayTick + restock2;
-        Player player = e.getPlayer();
+        long vilTick = VillagerUtilities.getTime(vil, plugin);
 
-        // Check if villager is disabled
-        if (!VillagerUtilities.isDisabled(vil, plugin)) return;
+        //Check if he should be restocked and restock
+        if (curTick >= todayRestock1 && vilTick < todayRestock1) {
+            restock(vil);
+            VillagerUtilities.setNewTime(vil, plugin);
+            return true;
+        } else if (curTick >= todayRestock2 && vilTick < todayRestock2) {
+            restock(vil);
+            VillagerUtilities.setNewTime(vil, plugin);
+            return true;
+        }
+        return false;
+    }
+
+    public void call(Villager vil, Player player) {
+
+        long currDayTimeTick = vil.getWorld().getTime();
 
         //Permission to Bypass restock cooldown
         if (player.hasPermission("avl.restockcooldown.bypass")) {
@@ -55,17 +75,9 @@ public class RestockVillager implements Listener {
             return;
         }
 
-        long vilTick = VillagerUtilities.getTime(vil, plugin);
-        //Check if he should be restocked
-        if (curTick >= todayRestock1 && vilTick < todayRestock1) {
-            restock(vil);
-            VillagerUtilities.setNewTime(vil, plugin);
+        // if successfully restocked, exit
+        if (handleRestock(vil, currDayTimeTick, plugin))
             return;
-        } else if (curTick >= todayRestock2 && vilTick < todayRestock2) {
-            restock(vil);
-            VillagerUtilities.setNewTime(vil, plugin);
-            return;
-        }
 
         //check if he gets to see cool-down time
         if (player.hasPermission("avl.message.nextrestock")) {
@@ -78,17 +90,8 @@ public class RestockVillager implements Listener {
             } else {
                 timeTillNextRestock = restock1 - currDayTimeTick;
             }
-            long totalsec = timeTillNextRestock / 20;
-            long sec = totalsec % 60;
-            long min = (totalsec - sec) / 60;
-            String message = plugin.getConfig().getString("messages.next-restock");
 
-            if (message.contains("%avlrestockmin%")) {
-                message = replaceText(message, "%avlrestockmin%", Long.toString(min));
-            }
-            message = replaceText(message, "%avlrestocksec%", Long.toString(sec));
-            player.sendMessage(colorCodes.cm(message));
-
+            restockMessage(timeTillNextRestock, player);
         }
     }
 }

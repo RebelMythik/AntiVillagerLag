@@ -73,8 +73,9 @@ public class VillagerUtilities {
         if((vil.getCustomName() != null) && (vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))){
             return true;
         }
+        Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
         // else check if Villager is disabled with Block
-        return vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
+        return belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
     }
     public static void setLevelCooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
         PersistentDataContainer container = v.getPersistentDataContainer();
@@ -101,5 +102,29 @@ public class VillagerUtilities {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, "Marker");
         return container.has(key, PersistentDataType.STRING);
+    }
+
+    public static void handleAiState(Villager vil, AntiVillagerLag plugin, Boolean override){
+
+        boolean disabled = isDisabled(vil, plugin);
+
+        // caller can define his own disable check
+        if(override != null)
+            disabled = override;
+
+        if(vil.hasAI()) {
+            // Check that the villager is disabled
+            if (!disabled)
+                return;
+            VillagerUtilities.setMarker(vil, plugin);
+            vil.setAI(false);
+        } else {
+            // Re-Enabling AI
+            // Check that the villager is disabled
+            if (disabled)
+                return;
+            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+            vil.setAI(true);
+        }
     }
 }
