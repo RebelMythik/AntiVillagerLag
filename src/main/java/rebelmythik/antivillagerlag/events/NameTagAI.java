@@ -8,8 +8,6 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
-import java.util.Locale;
-
 
 public class NameTagAI {
     private final AntiVillagerLag plugin;
@@ -34,8 +32,9 @@ public class NameTagAI {
         long sec = totalSeconds % 60;
         long min = (totalSeconds - sec) / 60;
 
-        // Check that the player uses a name-tag
-        if (!item.getType().equals(Material.NAME_TAG)) return;
+        // Check that the player uses a named name-tag
+        if (!item.getType().equals(Material.NAME_TAG) || !item.getItemMeta().hasDisplayName())
+            return;
 
         // Permissions to Bypass Cooldown. If they don't have permission run to see
         // if the cooldown is over and send message if it isn't
@@ -54,8 +53,9 @@ public class NameTagAI {
         // Replenish the name-tag and handle the correct AI state
         VillagerUtilities.returnItem(player, plugin);
 
+        boolean will_be_disabled = item.getItemMeta().getDisplayName().equals(plugin.getConfig().getString("NameThatDisables"));
         // Handle the correct AI state
-        VillagerUtilities.handleAiState(vil, this.plugin);
+        VillagerUtilities.handleAiState(vil, this.plugin, will_be_disabled);
         VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
     }
 }

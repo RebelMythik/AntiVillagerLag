@@ -1,14 +1,10 @@
 package rebelmythik.antivillagerlag.events;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
-import java.util.Locale;
 
 public class BlockAI {
     private final AntiVillagerLag plugin;
@@ -45,7 +41,7 @@ public class BlockAI {
         }
 
         // Handle the correct AI state
-        VillagerUtilities.handleAiState(vil, this.plugin);
+        VillagerUtilities.handleAiState(vil, this.plugin, null);
 
         VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
     }

@@ -104,9 +104,13 @@ public class VillagerUtilities {
         return container.has(key, PersistentDataType.STRING);
     }
 
-    public static void handleAiState(Villager vil, AntiVillagerLag plugin){
+    public static void handleAiState(Villager vil, AntiVillagerLag plugin, Boolean override){
 
         boolean disabled = isDisabled(vil, plugin);
+
+        // caller can define his own disable check
+        if(override != null)
+            disabled = override;
 
         if(vil.hasAI()) {
             // Check that the villager is disabled
