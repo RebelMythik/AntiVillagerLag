@@ -8,6 +8,8 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
+import java.util.Locale;
+
 
 public class NameTagAI {
     public AntiVillagerLag plugin;
@@ -27,7 +29,7 @@ public class NameTagAI {
 
 
         // create variables
-        String hasAI = String.valueOf(vil.hasAI()).toUpperCase();
+        String hasAI = String.valueOf(vil.hasAI()).toUpperCase(Locale.ENGLISH);
 
         long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
 
@@ -39,7 +41,8 @@ public class NameTagAI {
         // Check that the player uses a name-tag
         if (!item.getType().equals(Material.NAME_TAG)) return;
 
-        // Permissions to Bypass Cooldown. If they don't have permission run to see if the cooldown is over and send message if it isn't
+        // Permissions to Bypass Cooldown. If they don't have permission run to see
+        // if the cooldown is over and send message if it isn't
         if (!player.hasPermission("avl.renamecooldown.bypass")) {
             if (vilCooldown > currentTime) {
                 String message = plugin.getConfig().getString("messages.cooldown-message");
@@ -54,11 +57,14 @@ public class NameTagAI {
 
         // Replenish the name-tag and handle the correct AI state
         VillagerUtilities.returnItem(player, plugin);
+        String name = item.getItemMeta().getDisplayName();
         switch (hasAI) {
             // Disabling AI
             case "TRUE":
                 // Check if the name-tag has the correct name for disabling
-                if (!item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
+                if (!name.equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables")))
+                    return;
+
                 VillagerUtilities.setMarker(vil, plugin);
                 vil.setAI(false);
                 VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
@@ -67,13 +73,13 @@ public class NameTagAI {
             // Re-Enabling AI
             case "FALSE":
                 // Check if the name-tag has the correct name for re-enabling
-                if (item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) return;
-                if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+                if (name.equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables")))
+                    return;
 
+                if (!VillagerUtilities.hasMarker(vil, plugin)) return;
                 vil.setAI(true);
                 VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
                 break;
         }
-        return;
     }
 }

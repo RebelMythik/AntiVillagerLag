@@ -8,6 +8,8 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
+import java.util.Locale;
+
 public class BlockAI {
     public AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
@@ -21,15 +23,15 @@ public class BlockAI {
     public void call(Villager vil, Player player) {
 
         // create variables
-        String hasAI = String.valueOf(vil.hasAI()).toUpperCase();
+        String hasAI = String.valueOf(vil.hasAI()).toUpperCase(Locale.ENGLISH);
         Location loc = vil.getLocation();
 
         long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
 
         long currentTime = System.currentTimeMillis() / 1000;
-        Long totalSeconds = vilCooldown - currentTime;
-        Long sec = totalSeconds % 60;
-        Long min = (totalSeconds - sec) / 60;
+        long totalSeconds = vilCooldown - currentTime;
+        long sec = totalSeconds % 60;
+        long min = (totalSeconds - sec) / 60;
 
         // Permissions to Bypass Cooldown. If they don't have permission run to see if the cooldown is over and send message if it isn't
         if (!player.hasPermission("avl.blockcooldown.bypass")) {
@@ -44,15 +46,16 @@ public class BlockAI {
             }
         }
 
-
+        Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
         // Handle the correct AI state
         switch (hasAI) {
             // Disabling AI
             case "TRUE":
                 // Check that the villager is on the correct block
-                if (!vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")))) return;
-                VillagerUtilities.setMarker(vil, plugin);
+                if (!belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables"))))
+                    return;
 
+                VillagerUtilities.setMarker(vil, plugin);
                 vil.setAI(false);
                 VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
                 break;
@@ -60,9 +63,10 @@ public class BlockAI {
             // Re-Enabling AI
             case "FALSE":
                 // Check that the villager is on the correct block
-                if (vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY() - 1), loc.getBlockZ()).getType().equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")))) return;
-                if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+                if (belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables"))))
+                    return;
 
+                if (!VillagerUtilities.hasMarker(vil, plugin)) return;
                 vil.setAI(true);
                 VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
                 break;

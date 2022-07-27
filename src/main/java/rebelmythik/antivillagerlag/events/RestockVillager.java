@@ -30,7 +30,6 @@ public class RestockVillager {
         long todayRestock1 = currentDayTick + restock1;
         long todayRestock2 = currentDayTick + restock2;
 
-
         //Permission to Bypass restock cooldown
         if (player.hasPermission("avl.restockcooldown.bypass")) {
             restock(vil);
