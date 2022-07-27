@@ -11,7 +11,7 @@ import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 import java.util.Locale;
 
 public class BlockAI {
-    public AntiVillagerLag plugin;
+    private AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
     long cooldown;
 
@@ -24,7 +24,6 @@ public class BlockAI {
 
         // create variables
         String hasAI = String.valueOf(vil.hasAI()).toUpperCase(Locale.ENGLISH);
-        Location loc = vil.getLocation();
 
         long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
 
@@ -33,7 +32,8 @@ public class BlockAI {
         long sec = totalSeconds % 60;
         long min = (totalSeconds - sec) / 60;
 
-        // Permissions to Bypass Cooldown. If they don't have permission run to see if the cooldown is over and send message if it isn't
+        // Permissions to Bypass Cooldown.
+        // If they don't have permission run to see if the cooldown is over and send message if it isn't
         if (!player.hasPermission("avl.blockcooldown.bypass")) {
             if (vilCooldown > currentTime) {
                 String message = plugin.getConfig().getString("messages.cooldown-block-message");
@@ -46,30 +46,9 @@ public class BlockAI {
             }
         }
 
-        Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
         // Handle the correct AI state
-        switch (hasAI) {
-            // Disabling AI
-            case "TRUE":
-                // Check that the villager is on the correct block
-                if (!belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables"))))
-                    return;
+        VillagerUtilities.handleAiState(hasAI, vil, this.plugin);
 
-                VillagerUtilities.setMarker(vil, plugin);
-                vil.setAI(false);
-                VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
-                break;
-
-            // Re-Enabling AI
-            case "FALSE":
-                // Check that the villager is on the correct block
-                if (belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables"))))
-                    return;
-
-                if (!VillagerUtilities.hasMarker(vil, plugin)) return;
-                vil.setAI(true);
-                VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
-                break;
-        }
+        VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
     }
 }

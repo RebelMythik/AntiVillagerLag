@@ -9,7 +9,7 @@ import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
 public class VillagerLevelManager {
-    public AntiVillagerLag plugin;
+    private AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
     long cooldown;
     public VillagerLevelManager(AntiVillagerLag plugin) {
@@ -19,14 +19,13 @@ public class VillagerLevelManager {
 
     public void call(Villager vil, Player player) {
 
-
         int vilLevel = vil.getVillagerLevel();
         long newLevel = CalculateLevel.villagerEXP(vil);
         long currentTime = System.currentTimeMillis() / 1000;
 
         long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
-        Long totalSeconds = vilLevelCooldown - currentTime;
-        Long sec = totalSeconds % 60;
+        long totalSeconds = vilLevelCooldown - currentTime;
+        long sec = totalSeconds % 60;
 
         if (vilLevelCooldown > currentTime) {
             String message = plugin.getConfig().getString("messages.cooldown-levelup-message");

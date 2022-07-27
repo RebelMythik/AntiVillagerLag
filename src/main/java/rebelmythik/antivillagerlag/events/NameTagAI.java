@@ -12,7 +12,7 @@ import java.util.Locale;
 
 
 public class NameTagAI {
-    public AntiVillagerLag plugin;
+    private AntiVillagerLag plugin;
     ColorCode colorCodes = new ColorCode();
     long cooldown;
 
@@ -57,29 +57,10 @@ public class NameTagAI {
 
         // Replenish the name-tag and handle the correct AI state
         VillagerUtilities.returnItem(player, plugin);
-        String name = item.getItemMeta().getDisplayName();
-        switch (hasAI) {
-            // Disabling AI
-            case "TRUE":
-                // Check if the name-tag has the correct name for disabling
-                if (!name.equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables")))
-                    return;
 
-                VillagerUtilities.setMarker(vil, plugin);
-                vil.setAI(false);
-                VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
-                break;
+        // Handle the correct AI state
+        VillagerUtilities.handleAiState(hasAI, vil, this.plugin);
 
-            // Re-Enabling AI
-            case "FALSE":
-                // Check if the name-tag has the correct name for re-enabling
-                if (name.equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables")))
-                    return;
-
-                if (!VillagerUtilities.hasMarker(vil, plugin)) return;
-                vil.setAI(true);
-                VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
-                break;
-        }
+        VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
     }
 }
