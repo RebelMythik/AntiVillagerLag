@@ -97,7 +97,7 @@ public class VillagerUtilities {
         }
         Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
         // else check if Villager is disabled with Block
-        return belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
+        return plugin.getConfig().getStringList("BlocksThatDisables").contains(belowvil.toString());
     }
     public static void setLevelCooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
         PersistentDataContainer container = v.getPersistentDataContainer();
