@@ -3,6 +3,8 @@ package rebelmythik.antivillagerlag.events;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.CalculateLevel;
 import rebelmythik.antivillagerlag.utils.ColorCode;
@@ -14,6 +16,7 @@ public class VillagerLevelManager {
     long cooldown;
     public VillagerLevelManager(AntiVillagerLag plugin) {
         this.plugin = plugin;
+        // cooldown in seconds
         this.cooldown = 5;
     }
 
@@ -36,6 +39,8 @@ public class VillagerLevelManager {
 
         if (vilLevel < newLevel) {
             VillagerUtilities.setLevelCooldown(vil, plugin, cooldown);
+            // make villager immovable while AI is disabled
+            vil.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int)(cooldown * 20)+20, 120, false, false));
             vil.setAI(true);
         } else return;
 

@@ -1,4 +1,6 @@
 package rebelmythik.antivillagerlag.events;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
@@ -14,6 +16,26 @@ public class BlockAI {
     public BlockAI(AntiVillagerLag plugin) {
         this.plugin = plugin;
         this.cooldown = plugin.getConfig().getLong("cooldown");
+    }
+    public static void handleAiState(Villager vil, AntiVillagerLag plugin, boolean willBeDisabled){
+        if(vil.hasAI()) {
+            // Check that the villager is disabled
+            if (!willBeDisabled)
+                return;
+            VillagerUtilities.setMarker(vil, plugin);
+            VillagerUtilities.setDisabledByBlock(vil, plugin, true);
+            vil.setAI(false);
+        } else {
+            // Re-Enabling AI
+            // Check that the villager is disabled and disabled by Block
+            if (willBeDisabled || !VillagerUtilities.getDisabledByBlock(vil, plugin))
+                return;
+            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+
+            vil.setAI(true);
+
+            VillagerUtilities.setDisabledByBlock(vil, plugin, false);
+        }
     }
 
     public void call(Villager vil, Player player) {
@@ -39,9 +61,14 @@ public class BlockAI {
                 return;
             }
         }
+        Location loc = vil.getLocation();
+        Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
+        // else check if Villager is disabled with Block
+
+        boolean willBeDisabled = belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
 
         // Handle the correct AI state
-        VillagerUtilities.handleAiState(vil, this.plugin, null);
+        handleAiState(vil, this.plugin, willBeDisabled);
 
         VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
     }

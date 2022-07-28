@@ -48,8 +48,8 @@ public class EventListenerHandler implements Listener {
 
         long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
 
-        Long totalSeconds = vilLevelCooldown - currentTime;
-        Long sec = totalSeconds % 60;
+        long totalSeconds = vilLevelCooldown - currentTime;
+        long sec = totalSeconds % 60;
 
         Player player = e.getPlayer();
 
@@ -58,17 +58,27 @@ public class EventListenerHandler implements Listener {
             String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
             message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
             player.sendMessage(colorCodes.cm(message));
+            // why not ;)
+            vil.shakeHead();
             e.setCancelled(true);
             return;
         }
 
+        if(!VillagerUtilities.hasDisabledByBlock(vil, plugin)){
+            VillagerUtilities.setDisabledByBlock(vil, plugin, false);
+        }
 
         // handle Nametag Ai
-        if (plugin.getConfig().getBoolean("toggleableoptions.userenaming")) nameTagAI.call(vil, player);
+        if (plugin.getConfig().getBoolean("toggleableoptions.userenaming") && !VillagerUtilities.getDisabledByBlock(vil, plugin))
+            nameTagAI.call(vil, player);
+
         // handle Block Ai
-        if (plugin.getConfig().getBoolean("toggleableoptions.useblocks")) blockAi.call(vil, player);
+        if (plugin.getConfig().getBoolean("toggleableoptions.useblocks"))
+            blockAi.call(vil, player);
+
         // handle Restock, check if Villager is disabled before
-        if (VillagerUtilities.isDisabled(vil, plugin)) restockVillager.call(vil, player);
+        if (VillagerUtilities.isDisabled(vil, plugin))
+            restockVillager.call(vil, player);
     }
 
     @EventHandler

@@ -14,28 +14,51 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import java.util.List;
 
 public class VillagerUtilities {
+
+    // Define keys
+    private static final String COOLDOWN_KEY = "cooldown";
+    private static final String TIME_KEY = "key";
+    private static final String LEVEL_COOLDOWN_KEY = "levelCooldown";
+    private static final String MARKER_KEY = "Marker";
+
+    private static final String DISABLED_BY_BLOCK_KEY = "disabledByBlock";
+
+    public static void setDisabledByBlock(Villager v, AntiVillagerLag plugin, Boolean disabledByBlock) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_BLOCK_KEY);
+        container.set(key, PersistentDataType.STRING, disabledByBlock.toString());
+    }
+    public static boolean hasDisabledByBlock(Villager v, AntiVillagerLag plugin) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_BLOCK_KEY);
+        return container.has(key, PersistentDataType.STRING);
+    }
+    public static boolean getDisabledByBlock(Villager v, AntiVillagerLag plugin) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_BLOCK_KEY);
+        return Boolean.getBoolean(container.get(key, PersistentDataType.STRING));
+    }
+
     public static void setNewCooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "cooldown");
+        NamespacedKey key = new NamespacedKey(plugin, COOLDOWN_KEY);
         container.set(key, PersistentDataType.LONG, (System.currentTimeMillis() / 1000) + cooldown);
     }
     public static boolean hasCooldown(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "cooldown");
+        NamespacedKey key = new NamespacedKey(plugin, COOLDOWN_KEY);
         return container.has(key, PersistentDataType.LONG);
     }
     public static long getCooldown(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "cooldown");
-        long time = container.get(key, PersistentDataType.LONG);
-        return time;
+        NamespacedKey key = new NamespacedKey(plugin, COOLDOWN_KEY);
+        return container.get(key, PersistentDataType.LONG);
     }
     public static String replaceText(String text, String stuff2cut, String replacement) {
         int index = text.indexOf(stuff2cut);
         String text1 = text.substring(0, index);
         String text2 = text.substring(index + stuff2cut.length());
-        String finalText = text1 + replacement + text2;
-        return finalText;
+        return text1 + replacement + text2;
     }
     public static void restock(Villager v) {
         List<MerchantRecipe> recipes = v.getRecipes();
@@ -45,21 +68,20 @@ public class VillagerUtilities {
     }
     public static void setNewTime(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "time");
+        NamespacedKey key = new NamespacedKey(plugin, TIME_KEY);
         container.set(key, PersistentDataType.LONG, v.getWorld().getFullTime());
     }
 
     public static boolean hasTime(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "time");
+        NamespacedKey key = new NamespacedKey(plugin, TIME_KEY);
         return (container.has(key, PersistentDataType.LONG));
     }
 
     public static long getTime(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "time");
-        long time = container.get(key, PersistentDataType.LONG);
-        return time;
+        NamespacedKey key = new NamespacedKey(plugin, TIME_KEY);
+        return container.get(key, PersistentDataType.LONG);
     }
     public static void returnItem(Player player, AntiVillagerLag plugin) {
         // check if giving nametag is toggled and if player is not in creative
@@ -79,52 +101,29 @@ public class VillagerUtilities {
     }
     public static void setLevelCooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "levelCooldown");
+        NamespacedKey key = new NamespacedKey(plugin, LEVEL_COOLDOWN_KEY);
         container.set(key, PersistentDataType.LONG, (System.currentTimeMillis() / 1000) + cooldown);
     }
     public static boolean hasLevelCooldown(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "levelCooldown");
+        NamespacedKey key = new NamespacedKey(plugin, LEVEL_COOLDOWN_KEY);
         return container.has(key, PersistentDataType.LONG);
     }
     public static long getLevelCooldown(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "levelCooldown");
-        long time = container.get(key, PersistentDataType.LONG);
-        return time;
+        NamespacedKey key = new NamespacedKey(plugin, LEVEL_COOLDOWN_KEY);
+        return container.get(key, PersistentDataType.LONG);
     }
     public static void setMarker(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "Marker");
+        NamespacedKey key = new NamespacedKey(plugin, MARKER_KEY);
         container.set(key, PersistentDataType.STRING, ("AVL"));
     }
     public static boolean hasMarker(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "Marker");
+        NamespacedKey key = new NamespacedKey(plugin, MARKER_KEY);
         return container.has(key, PersistentDataType.STRING);
     }
 
-    public static void handleAiState(Villager vil, AntiVillagerLag plugin, Boolean override){
 
-        boolean disabled = isDisabled(vil, plugin);
-
-        // caller can define his own disable check
-        if(override != null)
-            disabled = override;
-
-        if(vil.hasAI()) {
-            // Check that the villager is disabled
-            if (!disabled)
-                return;
-            VillagerUtilities.setMarker(vil, plugin);
-            vil.setAI(false);
-        } else {
-            // Re-Enabling AI
-            // Check that the villager is disabled
-            if (disabled)
-                return;
-            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
-            vil.setAI(true);
-        }
-    }
 }
