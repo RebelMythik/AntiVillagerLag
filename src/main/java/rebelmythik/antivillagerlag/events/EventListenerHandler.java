@@ -72,8 +72,8 @@ public class EventListenerHandler implements Listener {
         if (plugin.getConfig().getBoolean("toggleableoptions.userenaming") && !VillagerUtilities.getDisabledByBlock(vil, plugin))
             nameTagAI.call(vil, player);
 
-        // handle Block Ai
-        if (plugin.getConfig().getBoolean("toggleableoptions.useblocks"))
+        // handle Block Ai, check if nametag cancelled event (avoid duplicate error?)
+        if (plugin.getConfig().getBoolean("toggleableoptions.useblocks") && !e.isCancelled())
             blockAi.call(vil, player);
 
         // handle Restock, check if Villager is disabled before
