@@ -17,10 +17,9 @@ public class VillagerUtilities {
 
     // Define keys
     private static final String COOLDOWN_KEY = "cooldown";
-    private static final String TIME_KEY = "key";
+    private static final String TIME_KEY = "time";
     private static final String LEVEL_COOLDOWN_KEY = "levelCooldown";
     private static final String MARKER_KEY = "Marker";
-
     private static final String DISABLED_BY_BLOCK_KEY = "disabledByBlock";
 
     public static void setDisabledByBlock(Villager v, AntiVillagerLag plugin, Boolean disabledByBlock) {

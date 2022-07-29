@@ -30,6 +30,22 @@ public class EventListenerHandler implements Listener {
         this.villagerLevelManager = new VillagerLevelManager(plugin);
     }
 
+    public void sanityChecks(Villager vil, long currentTime){
+
+        long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
+        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
+        long vilTime = VillagerUtilities.getTime(vil, plugin);
+
+        if(vilLevelCooldown > currentTime + villagerLevelManager.cooldown * 2)
+            VillagerUtilities.setLevelCooldown(vil, plugin, villagerLevelManager.cooldown);
+
+        if(vilCooldown > currentTime + blockAi.cooldown * 2)
+            VillagerUtilities.setNewCooldown(vil, plugin, blockAi.cooldown);
+
+        if(vilTime > vil.getWorld().getFullTime())
+            VillagerUtilities.setNewTime(vil, plugin);
+    }
+
 
 
     @EventHandler
@@ -45,8 +61,12 @@ public class EventListenerHandler implements Listener {
         // check whether this villager has cooldown tags
         if (!VillagerUtilities.hasCooldown(vil, plugin)) VillagerUtilities.setNewCooldown(vil, plugin, (long)0);
         if (!VillagerUtilities.hasLevelCooldown(vil, plugin)) VillagerUtilities.setLevelCooldown(vil, plugin, (long)0);
+        if (!VillagerUtilities.hasTime(vil, plugin)) VillagerUtilities.setNewTime(vil, plugin);
 
         long currentTime = System.currentTimeMillis() / 1000;
+
+        // if time is broken fix it!
+        sanityChecks(vil, currentTime);
 
         long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
 
@@ -69,7 +89,7 @@ public class EventListenerHandler implements Listener {
             VillagerUtilities.setDisabledByBlock(vil, plugin, false);
         }
 
-        // handle Nametag Ai
+        // handle Nametag Ai, check if it is already disabled by block
         if (plugin.getConfig().getBoolean("toggleableoptions.userenaming") && !VillagerUtilities.getDisabledByBlock(vil, plugin))
             nameTagAI.call(vil, player, e);
 
