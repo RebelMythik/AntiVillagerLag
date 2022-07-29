@@ -21,7 +21,7 @@ public class BlockAI {
     private boolean hasCooldown(Villager vil, Player player){
 
         // Permission to Bypass Cooldown.
-        if (!player.hasPermission("avl.blockcooldown.bypass"))
+        if (player.hasPermission("avl.blockcooldown.bypass"))
             return false;
 
         // create variables

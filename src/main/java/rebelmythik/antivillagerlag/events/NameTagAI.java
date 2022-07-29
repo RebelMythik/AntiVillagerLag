@@ -25,7 +25,7 @@ public class NameTagAI {
     private boolean hasCooldown(Villager vil, Player player, PlayerInteractEntityEvent e){
 
         // Permission to Bypass Cooldown.
-        if (!player.hasPermission("avl.renamecooldown.bypass"))
+        if (player.hasPermission("avl.renamecooldown.bypass"))
             return false;
 
         // create variables

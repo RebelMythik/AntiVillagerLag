@@ -10,11 +10,16 @@ commands:
 permissions:
   avl.reload:
     description: Allows user to reload the config
+    default: op
   avl.restockcooldown.bypass:
     description: Allows the player to bypass the restock on renaming villagers
+    default: false
   avl.renamecooldown.bypass:
     description: Allows the player to bypass the cooldown on renaming villagers
+    default: false
   avl.blockcooldown.bypass:
     description: Allows the player to bypass the cooldown on renaming villagers
+    default: false
   avl.message.nextrestock:
     description: Tells the player when the villager is restocking next
+    default: true
