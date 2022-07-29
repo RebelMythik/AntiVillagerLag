@@ -70,7 +70,7 @@ public class EventListenerHandler implements Listener {
 
         // handle Nametag Ai
         if (plugin.getConfig().getBoolean("toggleableoptions.userenaming") && !VillagerUtilities.getDisabledByBlock(vil, plugin))
-            nameTagAI.call(vil, player);
+            nameTagAI.call(vil, player, e);
 
         // handle Block Ai, check if nametag cancelled event (avoid duplicate error?)
         if (plugin.getConfig().getBoolean("toggleableoptions.useblocks") && !e.isCancelled())

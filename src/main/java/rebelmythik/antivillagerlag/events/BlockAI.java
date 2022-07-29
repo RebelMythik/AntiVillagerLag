@@ -50,15 +50,17 @@ public class BlockAI {
 
         // Permissions to Bypass Cooldown.
         // If they don't have permission run to see if the cooldown is over and send message if it isn't
-        if (!player.hasPermission("avl.blockcooldown.bypass")) {
-            if (vilCooldown > currentTime) {
-                String message = plugin.getConfig().getString("messages.cooldown-block-message");
-                if (message.contains("%avlminutes%")) {
-                    message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
+        if (!vil.getName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) {
+            if (!player.hasPermission("avl.blockcooldown.bypass")) {
+                if (vilCooldown > currentTime) {
+                    String message = plugin.getConfig().getString("messages.cooldown-block-message");
+                    if (message.contains("%avlminutes%")) {
+                        message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
+                    }
+                    message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
+                    player.sendMessage(colorCodes.cm(message));
+                    return;
                 }
-                message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-                player.sendMessage(colorCodes.cm(message));
-                return;
             }
         }
         Location loc = vil.getLocation();

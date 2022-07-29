@@ -3,6 +3,7 @@ package rebelmythik.antivillagerlag.events;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
@@ -38,7 +39,7 @@ public class NameTagAI {
         }
     }
 
-    public void call(Villager vil, Player player) {
+    public void call(Villager vil, Player player, PlayerInteractEntityEvent e) {
 
         // Toggle Option To Disable this Class
         if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
@@ -58,17 +59,20 @@ public class NameTagAI {
 
         // Permissions to Bypass Cooldown. If they don't have permission run to see
         // if the cooldown is over and send message if it isn't
-        if (!player.hasPermission("avl.renamecooldown.bypass")) {
-            if (vilCooldown > currentTime) {
-                String message = plugin.getConfig().getString("messages.cooldown-message");
-                if (message.contains("%avlminutes%")) {
-                    message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
+        if (item.getType().equals(Material.NAME_TAG)) {
+            plugin.getLogger().info("NameTagAI being a bitch");
+            if (!player.hasPermission("avl.renamecooldown.bypass")) {
+                if (vilCooldown > currentTime) {
+                    String message = plugin.getConfig().getString("messages.cooldown-message");
+                    if (message.contains("%avlminutes%")) {
+                        message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
+                    }
+                    message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
+                    player.sendMessage(colorCodes.cm(message));
+                    // player is trying to rename, stop them! (is safe to cancel)
+                    e.setCancelled(true);
+                    return;
                 }
-                message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-                player.sendMessage(colorCodes.cm(message));
-                // player is trying to rename, stop them! (is safe to cancel)
-                e.setCancelled(true);
-                return;
             }
         }
 
