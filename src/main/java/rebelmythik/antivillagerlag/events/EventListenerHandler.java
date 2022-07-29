@@ -34,7 +34,9 @@ public class EventListenerHandler implements Listener {
 
     @EventHandler
     public void rightClick(PlayerInteractEntityEvent e){
-
+        Player player = e.getPlayer();
+        if(player.hasPermission("avl.disable"))
+            return;
         // do checks and setup
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
 
@@ -51,7 +53,6 @@ public class EventListenerHandler implements Listener {
         long totalSeconds = vilLevelCooldown - currentTime;
         long sec = totalSeconds % 60;
 
-        Player player = e.getPlayer();
 
         // Check if the villager is disabled for leveling and send a message
         if (vilLevelCooldown > currentTime) {
@@ -83,6 +84,10 @@ public class EventListenerHandler implements Listener {
 
     @EventHandler
     public void afterTrade(InventoryCloseEvent event) {
+
+        Player player = (Player) event.getPlayer();
+        if(player.hasPermission("avl.disable"))
+            return;
         // check if inventory belongs to a Villager Trade Screen
         if(event.getInventory().getType() != InventoryType.MERCHANT) return;
 
@@ -90,12 +95,8 @@ public class EventListenerHandler implements Listener {
 
         Villager vil = (Villager) event.getInventory().getHolder();
 
-
         if (!VillagerUtilities.isDisabled(vil, plugin)) return;
         if (!VillagerUtilities.hasLevelCooldown(vil, plugin)) VillagerUtilities.setLevelCooldown(vil, plugin, (long)0);
-
-
-        Player player = (Player) event.getPlayer();
 
         villagerLevelManager.call(vil, player);
     }

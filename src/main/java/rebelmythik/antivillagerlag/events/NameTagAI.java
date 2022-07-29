@@ -20,23 +20,36 @@ public class NameTagAI {
         this.cooldown = plugin.getConfig().getLong("cooldown");
     }
 
-    public static void handleAiState(Villager vil, AntiVillagerLag plugin, boolean willBeDisabled){
 
+    // automatically sends a message to the player
+    private boolean hasCooldown(Villager vil, Player player, PlayerInteractEntityEvent e){
 
-        if(vil.hasAI()) {
-            // Check that the villager is disabled
-            if (!willBeDisabled)
-                return;
-            VillagerUtilities.setMarker(vil, plugin);
-            vil.setAI(false);
-        } else {
-            // Re-Enabling AI
-            // Check that the villager is disabled
-            if (willBeDisabled)
-                return;
-            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
-            vil.setAI(true);
+        // Permission to Bypass Cooldown.
+        if (player.hasPermission("avl.renamecooldown.bypass"))
+            return false;
+
+        // create variables
+        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
+        long currentTime = System.currentTimeMillis() / 1000;
+
+         // if the cooldown is over and send message if it isn't
+        if (vilCooldown > currentTime) {
+
+            long totalSeconds = vilCooldown - currentTime;
+            long sec = totalSeconds % 60;
+            long min = (totalSeconds - sec) / 60;
+
+            String message = plugin.getConfig().getString("messages.cooldown-message");
+            if (message.contains("%avlminutes%")) {
+                message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
+            }
+            message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
+            player.sendMessage(colorCodes.cm(message));
+            // player is trying to rename, stop them! (is safe to cancel)
+            e.setCancelled(true);
+            return true;
         }
+        return false;
     }
 
     public void call(Villager vil, Player player, PlayerInteractEntityEvent e) {
@@ -49,40 +62,42 @@ public class NameTagAI {
         if (!item.getType().equals(Material.NAME_TAG) || !item.getItemMeta().hasDisplayName())
             return;
 
-        // create variables
-        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
-        long currentTime = System.currentTimeMillis() / 1000;
-        long totalSeconds = vilCooldown - currentTime;
-        long sec = totalSeconds % 60;
-        long min = (totalSeconds - sec) / 60;
-
-
-        // Permissions to Bypass Cooldown. If they don't have permission run to see
-        // if the cooldown is over and send message if it isn't
-        if (item.getType().equals(Material.NAME_TAG)) {
-            plugin.getLogger().info("NameTagAI being a bitch");
-            if (!player.hasPermission("avl.renamecooldown.bypass")) {
-                if (vilCooldown > currentTime) {
-                    String message = plugin.getConfig().getString("messages.cooldown-message");
-                    if (message.contains("%avlminutes%")) {
-                        message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
-                    }
-                    message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-                    player.sendMessage(colorCodes.cm(message));
-                    // player is trying to rename, stop them! (is safe to cancel)
-                    e.setCancelled(true);
-                    return;
-                }
-            }
-        }
-
-        // Replenish the name-tag and handle the correct AI state
+        // Replenish the name-tag
         VillagerUtilities.returnItem(player, plugin);
 
         boolean willBeDisabled = item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"));
 
         // Handle the correct AI state
-        handleAiState(vil, this.plugin, willBeDisabled);
-        VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+        if(vil.hasAI()) {
+            // Check that the villager is disabled or has cooldown
+            if (!willBeDisabled)
+                return;
+
+            // check if villager has AI Toggle cooldown
+            if (hasCooldown(vil, player, e))
+                return;
+
+            vil.setAI(false);
+            // set all necessary flags and timers
+            VillagerUtilities.setMarker(vil, plugin);
+            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+        } else {
+            // Re-Enabling AI
+            // Check that the villager is disabled
+            if (willBeDisabled )
+                return;
+
+            // check if villager has AI Toggle cooldown
+            if (hasCooldown(vil, player, e))
+                return;
+
+            // check if Villager was disabled by AVL
+            // prevents breaking NPC plugins
+            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+            vil.setAI(true);
+            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+            // remove the marker again
+            VillagerUtilities.removeMarker(vil, plugin);
+        }
     }
 }

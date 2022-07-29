@@ -124,6 +124,11 @@ public class VillagerUtilities {
         NamespacedKey key = new NamespacedKey(plugin, MARKER_KEY);
         return container.has(key, PersistentDataType.STRING);
     }
+    public static void removeMarker(Villager v, AntiVillagerLag plugin) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, MARKER_KEY);
+        container.remove(key);
+    }
 
 
 }
