@@ -17,52 +17,38 @@ public class BlockAI {
         this.plugin = plugin;
         this.cooldown = plugin.getConfig().getLong("cooldown");
     }
-    public static void handleAiState(Villager vil, AntiVillagerLag plugin, boolean willBeDisabled){
-        if(vil.hasAI()) {
-            // Check that the villager is disabled
-            if (!willBeDisabled)
-                return;
-            VillagerUtilities.setMarker(vil, plugin);
-            VillagerUtilities.setDisabledByBlock(vil, plugin, true);
-            vil.setAI(false);
-        } else {
-            // Re-Enabling AI
-            // Check that the villager is disabled and disabled by Block
-            if (willBeDisabled || !VillagerUtilities.getDisabledByBlock(vil, plugin))
-                return;
-            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
 
-            vil.setAI(true);
+    private boolean hasCooldown(Villager vil, Player player){
 
-            VillagerUtilities.setDisabledByBlock(vil, plugin, false);
-        }
-    }
-
-    public void call(Villager vil, Player player) {
+        // Permission to Bypass Cooldown.
+        if (!player.hasPermission("avl.blockcooldown.bypass"))
+            return false;
 
         // create variables
         long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
 
         long currentTime = System.currentTimeMillis() / 1000;
-        long totalSeconds = vilCooldown - currentTime;
-        long sec = totalSeconds % 60;
-        long min = (totalSeconds - sec) / 60;
 
-        // Permissions to Bypass Cooldown.
-        // If they don't have permission run to see if the cooldown is over and send message if it isn't
-        if (!vil.getName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"))) {
-            if (!player.hasPermission("avl.blockcooldown.bypass")) {
-                if (vilCooldown > currentTime) {
-                    String message = plugin.getConfig().getString("messages.cooldown-block-message");
-                    if (message.contains("%avlminutes%")) {
-                        message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
-                    }
-                    message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-                    player.sendMessage(colorCodes.cm(message));
-                    return;
-                }
+        // see if the cooldown is over and send message if it isn't
+        if (vilCooldown > currentTime) {
+
+            long totalSeconds = vilCooldown - currentTime;
+            long sec = totalSeconds % 60;
+            long min = (totalSeconds - sec) / 60;
+
+            String message = plugin.getConfig().getString("messages.cooldown-block-message");
+            if (message.contains("%avlminutes%")) {
+                message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
             }
+            message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
+            player.sendMessage(colorCodes.cm(message));
+            return true;
         }
+        return false;
+    }
+
+    public void call(Villager vil, Player player) {
+
         Location loc = vil.getLocation();
         Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
         // else check if Villager is disabled with Block
@@ -70,8 +56,34 @@ public class BlockAI {
         boolean willBeDisabled = belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
 
         // Handle the correct AI state
-        handleAiState(vil, this.plugin, willBeDisabled);
-
-        VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+        if(vil.hasAI()) {
+            // Check that the villager is disabled
+            if (!willBeDisabled)
+                return;
+            // check if villager has AI Toggle cooldown
+            if(hasCooldown(vil, player))
+                return;
+            vil.setAI(false);
+            // set all necessary flags and timers
+            VillagerUtilities.setMarker(vil, plugin);
+            VillagerUtilities.setDisabledByBlock(vil, plugin, true);
+            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+        } else {
+            // Re-Enabling AI
+            // Check that the villager is disabled and disabled by Block
+            if (willBeDisabled || !VillagerUtilities.getDisabledByBlock(vil, plugin))
+                return;
+            // check if villager has AI Toggle cooldown
+            if(hasCooldown(vil, player))
+                return;
+            // check if Villager was disabled by AVL
+            // prevents breaking NPC plugins
+            if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+            vil.setAI(true);
+            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+            VillagerUtilities.setDisabledByBlock(vil, plugin, false);
+            // remove the marker again
+            VillagerUtilities.removeMarker(vil, plugin);
+        }
     }
 }
