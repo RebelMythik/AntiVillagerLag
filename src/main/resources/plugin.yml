@@ -8,6 +8,9 @@ commands:
     description: reloads the config
 
 permissions:
+  avl.disable:
+    description: Allows disabling AVL for users or worlds
+    default: false
   avl.reload:
     description: Allows user to reload the config
     default: op
