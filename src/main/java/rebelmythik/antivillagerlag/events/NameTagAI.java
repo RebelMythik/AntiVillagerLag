@@ -66,6 +66,8 @@ public class NameTagAI {
                 }
                 message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
                 player.sendMessage(colorCodes.cm(message));
+                // player is trying to rename, stop them! (is safe to cancel)
+                e.setCancelled(true);
                 return;
             }
         }
