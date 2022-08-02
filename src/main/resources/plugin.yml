@@ -1,11 +1,13 @@
 name: AntiVillagerLag
 version: '${project.version}'
 main: rebelmythik.antivillagerlag.AntiVillagerLag
-api-version: 1.18
+api-version: 1.17
 
 commands:
   avlreload:
     description: reloads the config
+  avloptimize:
+    description: will disable all the nearby villagers
 
 permissions:
   avl.disable:
@@ -26,3 +28,6 @@ permissions:
   avl.message.nextrestock:
     description: Tells the player when the villager is restocking next
     default: true
+  avl.optimize:
+    description: Lets you disable villagers is a radius
+    default: op

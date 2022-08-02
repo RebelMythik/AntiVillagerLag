@@ -15,6 +15,9 @@ RestockTimes:
 # at the minimum time of 10 minutes or 600 seconds due anything less allowing for the double trades to happen.
 cooldown: 600
 
+# The maximum radius in blocks the /avloptimize command can search
+RadiusLimit: 50
+
 toggleableoptions:
   # If set to true, nametags will be used instead of being infinite.
   usenametags: false
@@ -33,4 +36,6 @@ messages:
   cooldown-block-message: "&cYou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
   cooldown-levelup-message: "&cThe villager is currently leveling up! You can use the villager again in %avlseconds% seconds."
   next-restock: "&cThe next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
+  correct-usage: "&cCorrect Usage is /avloptimize <radius>"
+  radius-limit: "&cThe radius you tried is to big. Radius limit is 50 blocks."
 

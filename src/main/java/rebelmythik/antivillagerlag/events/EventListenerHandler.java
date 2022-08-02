@@ -1,8 +1,7 @@
 package rebelmythik.antivillagerlag.events;
 
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -109,6 +108,8 @@ public class EventListenerHandler implements Listener {
         if(player.hasPermission("avl.disable"))
             return;
         // check if inventory belongs to a Villager Trade Screen
+        if (event.getInventory().getHolder() instanceof WanderingTrader) return;
+
         if(event.getInventory().getType() != InventoryType.MERCHANT) return;
 
         if (event.getInventory().getHolder() == null) return;
