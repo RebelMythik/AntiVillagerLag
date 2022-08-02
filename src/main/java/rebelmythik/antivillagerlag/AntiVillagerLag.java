@@ -3,6 +3,8 @@ package rebelmythik.antivillagerlag;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.MultiLineChart;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -10,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import rebelmythik.antivillagerlag.commands.RadiusOptimizeCommand;
 import rebelmythik.antivillagerlag.commands.ReloadCommand;
 import rebelmythik.antivillagerlag.events.EventListenerHandler;
+import rebelmythik.antivillagerlag.utils.ColorCode;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +25,15 @@ public final class AntiVillagerLag extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         this.getServer().getPluginManager().registerEvents(new EventListenerHandler(this),this);
+        ColorCode colorcodes = new ColorCode();
+
         getCommand("avlreload").setExecutor(new ReloadCommand(this));
+        getCommand("avlreload").setPermissionMessage(colorcodes.cm(this.getConfig().getString("messages.no-permission")));
+
         getCommand("avloptimize").setExecutor(new RadiusOptimizeCommand(this));
+        getCommand("avloptimize").setPermissionMessage(colorcodes.cm(this.getConfig().getString("messages.no-permission")));
+
+
         saveDefaultConfig();
         updateConfig();
 

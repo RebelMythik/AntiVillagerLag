@@ -6,8 +6,10 @@ api-version: 1.17
 commands:
   avlreload:
     description: reloads the config
+    permission: avl.reload
   avloptimize:
     description: will disable all the nearby villagers
+    permission: avl.optimize
 
 permissions:
   avl.disable:
