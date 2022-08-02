@@ -1,10 +1,12 @@
 package rebelmythik.antivillagerlag.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitScheduler;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
@@ -81,6 +83,9 @@ public class NameTagAI {
             // set all necessary flags and timers
             VillagerUtilities.setMarker(vil, plugin);
             VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+
+
+
         } else {
             // Re-Enabling AI
             // Check that the villager is disabled
@@ -98,6 +103,15 @@ public class NameTagAI {
             VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
             // remove the marker again
             VillagerUtilities.removeMarker(vil, plugin);
+
+            if(plugin.getConfig().getBoolean("toggleableoptions.clearnametag.enabled")) {
+                boolean clearName = item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("toggleableoptions.clearnametag.nametag"));
+                if (clearName) {
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        e.getRightClicked().setCustomName(null);
+                    }, 1);
+                }
+            }
         }
     }
 }

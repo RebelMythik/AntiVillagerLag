@@ -29,6 +29,11 @@ toggleableoptions:
   # This will allow a block to disable and renable the Villager AI.
   useblocks: false
 
+  # This lets you remove the name from villagers when you disable their AI if you use a specific tag
+  clearnametag:
+    enabled: false
+    nametag: 'ClearName'
+
 messages:
   no-permission: "&cYou don't have permission to use this command."
   reload-message: "&aPlugin successfully reloaded."
