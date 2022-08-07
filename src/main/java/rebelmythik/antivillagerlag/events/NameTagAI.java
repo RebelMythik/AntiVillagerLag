@@ -62,9 +62,6 @@ public class NameTagAI {
         if (!item.getType().equals(Material.NAME_TAG) || !item.getItemMeta().hasDisplayName())
             return;
 
-        // Replenish the name-tag
-        VillagerUtilities.returnItem(player, plugin);
-
         boolean willBeDisabled = item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"));
 
         // Handle the correct AI state
@@ -99,5 +96,9 @@ public class NameTagAI {
             // remove the marker again
             VillagerUtilities.removeMarker(vil, plugin);
         }
+        
+        // Replenish the name-tag
+        VillagerUtilities.returnItem(player, plugin);
+        
     }
 }
