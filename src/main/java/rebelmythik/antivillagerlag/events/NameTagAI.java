@@ -53,7 +53,7 @@ public class NameTagAI {
     }
 
     public void call(Villager vil, Player player, PlayerInteractEntityEvent e) {
-
+    
         // Toggle Option To Disable this Class
         if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -71,7 +71,7 @@ public class NameTagAI {
         if(vil.hasAI()) {
             // Check that the villager is disabled or has cooldown
             if (!willBeDisabled)
-                return;
+                break;
 
             // check if villager has AI Toggle cooldown
             if (hasCooldown(vil, player, e))
@@ -84,8 +84,8 @@ public class NameTagAI {
         } else {
             // Re-Enabling AI
             // Check that the villager is disabled
-            if (willBeDisabled )
-                return;
+            if (willBeDisabled)
+                break;
 
             // check if villager has AI Toggle cooldown
             if (hasCooldown(vil, player, e))
@@ -99,5 +99,9 @@ public class NameTagAI {
             // remove the marker again
             VillagerUtilities.removeMarker(vil, plugin);
         }
+        
+        // Replenish the name-tag
+        VillagerUtilities.returnItem(player, plugin);
+        
     }
 }
