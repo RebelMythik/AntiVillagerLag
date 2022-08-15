@@ -15,14 +15,10 @@ public class ReloadCommand implements CommandExecutor {
         this.plugin = plugin;
     }
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("avlreload")) {
-            if(!sender.hasPermission("avl.reload")) {
-                sender.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.no-permission")));
-                return true;
-            }
+
             sender.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.reload-message")));
             plugin.reloadConfig();
-        }
-        return false;
+
+        return true;
     }
 }

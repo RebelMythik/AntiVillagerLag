@@ -34,7 +34,6 @@ public class RadiusOptimizeCommand implements CommandExecutor {
 
         String playerName = sender.getName();
 
-        if (cmd.getName().equalsIgnoreCase("avloptimize")) {
             if(!sender.hasPermission("avl.optimize")) {
                 sender.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.no-permission")));
                 return true;
@@ -57,7 +56,7 @@ public class RadiusOptimizeCommand implements CommandExecutor {
                     sender.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.radius-limit")));
                     return false;
                 }
-
+                int count = 0;
                 for (Entity entity : Bukkit.getPlayer(playerName).getNearbyEntities(radius, radius, radius)) {
                     Entity vil = entity;
                     if (entity instanceof Villager) {
@@ -80,12 +79,14 @@ public class RadiusOptimizeCommand implements CommandExecutor {
                             // set all necessary flags and timers
                             VillagerUtilities.setMarker((Villager) vil, plugin);
                             VillagerUtilities.setNewCooldown((Villager) vil, plugin, cooldown);
+                            count++;
                         }
 
                     }
                 }
+                sender.sendMessage(colorcodes.cm("&aOptimized "+count+" villagers!"));
             }
-        }
-        return false;
+
+        return true;
     }
 }
