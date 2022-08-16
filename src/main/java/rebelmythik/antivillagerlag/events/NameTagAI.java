@@ -63,7 +63,9 @@ public class NameTagAI {
             return;
 
         // Replenish the name-tag
-        VillagerUtilities.returnItem(player, plugin);
+        if (!hasCooldown(vil, player, e)) {
+            VillagerUtilities.returnItem(player, plugin);
+        }
 
         boolean willBeDisabled = item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"));
 
