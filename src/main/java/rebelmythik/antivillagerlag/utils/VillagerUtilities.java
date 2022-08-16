@@ -36,7 +36,7 @@ public class VillagerUtilities {
     public static boolean getDisabledByBlock(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_BLOCK_KEY);
-        return Boolean.getBoolean(container.get(key, PersistentDataType.STRING));
+        return Boolean.parseBoolean(container.get(key, PersistentDataType.STRING));
     }
 
     public static void setNewCooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
