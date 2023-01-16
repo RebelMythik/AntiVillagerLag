@@ -72,12 +72,13 @@ public class NameTagAI {
         // Handle the correct AI state
         if(vil.hasAI()) {
             // Check that the villager is disabled or has cooldown
-            if (!willBeDisabled)
+            if (!willBeDisabled) {
                 return;
 
             // check if villager has AI Toggle cooldown
-            if (hasCooldown(vil, player, e))
+            if (hasCooldown(vil, player, e)) {
                 return;
+            }
 
             vil.setAI(false);
             // set all necessary flags and timers
@@ -86,12 +87,13 @@ public class NameTagAI {
         } else {
             // Re-Enabling AI
             // Check that the villager is disabled
-            if (willBeDisabled )
+            if (willBeDisabled) {
                 return;
-
+            }
             // check if villager has AI Toggle cooldown
-            if (hasCooldown(vil, player, e))
+            if (hasCooldown(vil, player, e)) {
                 return;
+            }
 
             // check if Villager was disabled by AVL
             // prevents breaking NPC plugins

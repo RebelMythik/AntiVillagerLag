@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import rebelmythik.antivillagerlag.commands.RadiusOptimizeCommand;
 import rebelmythik.antivillagerlag.commands.ReloadCommand;
+import rebelmythik.antivillagerlag.events.CancelVillagerDamage;
 import rebelmythik.antivillagerlag.events.EventListenerHandler;
 
 import java.io.File;
@@ -22,6 +23,7 @@ public final class AntiVillagerLag extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         this.getServer().getPluginManager().registerEvents(new EventListenerHandler(this),this);
+        this.getServer().getPluginManager().registerEvents(new CancelVillagerDamage(this),this);
         getCommand("avlreload").setExecutor(new ReloadCommand(this));
         getCommand("avloptimize").setExecutor(new RadiusOptimizeCommand(this));
         saveDefaultConfig();

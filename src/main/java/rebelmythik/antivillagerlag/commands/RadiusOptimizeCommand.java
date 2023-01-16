@@ -1,23 +1,14 @@
 package rebelmythik.antivillagerlag.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import static rebelmythik.antivillagerlag.utils.VillagerUtilities.getCooldown;
 
 public class RadiusOptimizeCommand implements CommandExecutor {
 
