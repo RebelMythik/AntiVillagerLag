@@ -92,12 +92,14 @@ public class VillagerUtilities {
     public static boolean isDisabled(Villager vil, AntiVillagerLag plugin) {
         Location loc = vil.getLocation();
         // check if Villager is disabled with Nametag
-        if((vil.getCustomName() != null) && (vil.getCustomName().equals(plugin.getConfig().getString("NameThatDisables")))){
+        if((vil.getCustomName() != null) && (plugin.getConfig().getStringList("NamesThatDisable").contains(vil.getCustomName()))){
             return true;
         }
         Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
         // else check if Villager is disabled with Block
-        return belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
+        List<String> blocksThatDisable = plugin.getConfig().getStringList("BlocksThatDisable");
+        boolean willBeDisabled = blocksThatDisable.contains(belowvil.name());
+        return willBeDisabled;
     }
     public static void setLevelCooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
         PersistentDataContainer container = v.getPersistentDataContainer();
