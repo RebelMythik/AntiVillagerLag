@@ -74,7 +74,7 @@ public class NameTagAI {
             // Check that the villager is disabled or has cooldown
             if (!willBeDisabled) {
                 return;
-
+            }
             // check if villager has AI Toggle cooldown
             if (hasCooldown(vil, player, e)) {
                 return;
