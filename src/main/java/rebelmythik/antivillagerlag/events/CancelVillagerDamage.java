@@ -1,6 +1,5 @@
 package rebelmythik.antivillagerlag.events;
 
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;

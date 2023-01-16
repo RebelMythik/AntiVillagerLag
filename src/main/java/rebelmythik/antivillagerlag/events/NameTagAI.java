@@ -9,6 +9,9 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
+import java.util.List;
+import java.util.function.Supplier;
+
 
 public class NameTagAI {
     private final AntiVillagerLag plugin;
@@ -66,8 +69,9 @@ public class NameTagAI {
         if (!hasCooldown(vil, player, e)) {
             VillagerUtilities.returnItem(player, plugin);
         }
-
-        boolean willBeDisabled = item.getItemMeta().getDisplayName().equalsIgnoreCase(plugin.getConfig().getString("NameThatDisables"));
+        List<String> namesThatDisable = plugin.getConfig().getStringList("NamesThatDisable");
+        String itemName = item.getItemMeta().getDisplayName().replaceAll("(?i)[§&][0-9A-FK-ORX]", "");
+        boolean willBeDisabled = namesThatDisable.contains(itemName);
 
         // Handle the correct AI state
         if(vil.hasAI()) {

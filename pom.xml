@@ -6,7 +6,7 @@
 
     <groupId>rebelmythik</groupId>
     <artifactId>AntiVillagerLag</artifactId>
-    <version>2.1.4</version>
+    <version>2.2.0</version>
     <packaging>jar</packaging>
 
     <name>AntiVillagerLag</name>

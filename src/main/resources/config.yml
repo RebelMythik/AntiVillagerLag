@@ -1,8 +1,12 @@
 # What the villager needs to be named to be disabled.
-NameThatDisables: 'Optimize'
+NamesThatDisable:
+  - Optimize
+  - Bonk
 
 # This needs to be a valid block ID to work.
-BlockThatDisables: 'EMERALD_BLOCK'
+BlocksThatDisable:
+  - EMERALD_BLOCK
+  - COBBLESTONE
 
 # Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
 # See https://minecraft.fandom.com/wiki/Daylight_cycle for more info

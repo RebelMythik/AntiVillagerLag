@@ -53,9 +53,10 @@ public class BlockAI {
 
         Location loc = vil.getLocation();
         Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
-        // else check if Villager is disabled with Block
 
-        boolean willBeDisabled = belowvil.equals(Material.getMaterial(plugin.getConfig().getString("BlockThatDisables")));
+        // else check if Villager is disabled with Block
+        List<String> blocksThatDisable = plugin.getConfig().getStringList("BlocksThatDisable");
+        boolean willBeDisabled = blocksThatDisable.contains(belowvil.name());
 
         // Handle the correct AI state
         if(vil.hasAI()) {
