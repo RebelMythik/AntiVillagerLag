@@ -11,8 +11,9 @@ BlocksThatDisable:
 # Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
 # See https://minecraft.fandom.com/wiki/Daylight_cycle for more info
 RestockTimes:
-  time1: 1000
-  time2: 13000
+  times:
+    - 1000
+    - 13000
 
 # This time is in seconds. This cooldown for renaming is to prevent possible abuse
 # of people repeatedly disabling ai and re-enabling it to get double trades. I would keep this

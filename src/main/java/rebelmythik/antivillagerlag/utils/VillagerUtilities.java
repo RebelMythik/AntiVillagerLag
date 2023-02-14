@@ -92,7 +92,11 @@ public class VillagerUtilities {
     public static boolean isDisabled(Villager vil, AntiVillagerLag plugin) {
         Location loc = vil.getLocation();
         // check if Villager is disabled with Nametag
-        if((vil.getCustomName() != null) && (plugin.getConfig().getStringList("NamesThatDisable").contains(vil.getCustomName()))){
+        if (vil.getCustomName() == null) {
+            return false;
+        }
+        String vilName = vil.getCustomName().replaceAll("(?i)[§&][0-9A-FK-ORX]", "");
+        if(plugin.getConfig().getStringList("NamesThatDisable").contains(vilName)){
             return true;
         }
         Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();

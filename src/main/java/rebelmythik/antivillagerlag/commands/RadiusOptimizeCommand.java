@@ -10,6 +10,8 @@ import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
+import java.util.List;
+
 public class RadiusOptimizeCommand implements CommandExecutor {
 
     AntiVillagerLag plugin;
@@ -52,7 +54,7 @@ public class RadiusOptimizeCommand implements CommandExecutor {
                 for (Entity entity : Bukkit.getPlayer(playerName).getNearbyEntities(radius, radius, radius)) {
                     Entity vil = entity;
                     if (entity instanceof Villager) {
-                        if(((Villager) entity).hasAI()) {
+                        if(((Villager) entity).isAware()) {
                             // If they don't have cooldown set it
                             if (!VillagerUtilities.hasCooldown((Villager) vil, plugin)) {
                                 VillagerUtilities.setNewCooldown((Villager) vil, plugin, (long)0);
@@ -65,8 +67,9 @@ public class RadiusOptimizeCommand implements CommandExecutor {
                             if (cooldown > currentTime) return false;
 
                             // Set Villager Name to Optimize Name and disable the AI
-                            entity.setCustomName(plugin.getConfig().getString("NameThatDisables"));
-                            ((Villager) entity).setAI(false);
+                            List<String> namesThatDisable = plugin.getConfig().getStringList("NamesThatDisable");
+                            entity.setCustomName(namesThatDisable.get(0));
+                            ((Villager) entity).setAware(false);
 
                             // set all necessary flags and timers
                             VillagerUtilities.setMarker((Villager) vil, plugin);

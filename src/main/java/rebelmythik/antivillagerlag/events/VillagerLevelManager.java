@@ -42,11 +42,11 @@ public class VillagerLevelManager {
             VillagerUtilities.setLevelCooldown(vil, plugin, cooldown);
             // make villager immovable while AI is disabled
             vil.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int)(cooldown * 20)+20, 120, false, false));
-            vil.setAI(true);
+            vil.setAware(true);
         } else return;
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            vil.setAI(false);
+            vil.setAware(false);
         }, 100L);
     }
 }

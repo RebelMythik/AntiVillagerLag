@@ -59,14 +59,14 @@ public class BlockAI {
         boolean willBeDisabled = blocksThatDisable.contains(belowvil.name());
 
         // Handle the correct AI state
-        if(vil.hasAI()) {
+        if(vil.isAware()) {
             // Check that the villager is disabled
             if (!willBeDisabled)
                 return;
             // check if villager has AI Toggle cooldown
             if(hasCooldown(vil, player))
                 return;
-            vil.setAI(false);
+            vil.setAware(false);
             // set all necessary flags and timers
             VillagerUtilities.setMarker(vil, plugin);
             VillagerUtilities.setDisabledByBlock(vil, plugin, true);
@@ -82,7 +82,7 @@ public class BlockAI {
             // check if Villager was disabled by AVL
             // prevents breaking NPC plugins
             if (!VillagerUtilities.hasMarker(vil, plugin)) return;
-            vil.setAI(true);
+            vil.setAware(true);
             VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
             VillagerUtilities.setDisabledByBlock(vil, plugin, false);
             // remove the marker again

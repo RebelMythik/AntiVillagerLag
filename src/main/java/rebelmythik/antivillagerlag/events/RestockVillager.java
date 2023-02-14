@@ -89,6 +89,7 @@ public class RestockVillager {
                 }
             }
 
+
             if (timeTillNextRestock == Long.MAX_VALUE) {
                 timeTillNextRestock = (24000 - currentDay) + restockTimes.get(0);
             }

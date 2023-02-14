@@ -74,7 +74,7 @@ public class NameTagAI {
         boolean willBeDisabled = namesThatDisable.contains(itemName);
 
         // Handle the correct AI state
-        if(vil.hasAI()) {
+        if(vil.isAware()) {
             // Check that the villager is disabled or has cooldown
             if (!willBeDisabled) {
                 return;
@@ -84,7 +84,7 @@ public class NameTagAI {
                 return;
             }
 
-            vil.setAI(false);
+            vil.setAware(false);
             // set all necessary flags and timers
             VillagerUtilities.setMarker(vil, plugin);
             VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
@@ -102,7 +102,7 @@ public class NameTagAI {
             // check if Villager was disabled by AVL
             // prevents breaking NPC plugins
             if (!VillagerUtilities.hasMarker(vil, plugin)) return;
-            vil.setAI(true);
+            vil.setAware(true);
             VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
             // remove the marker again
             VillagerUtilities.removeMarker(vil, plugin);

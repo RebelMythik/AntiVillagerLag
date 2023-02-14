@@ -20,6 +20,8 @@ public class EventListenerHandler implements Listener {
     public NameTagAI nameTagAI;
     public RestockVillager restockVillager;
     public VillagerLevelManager villagerLevelManager;
+
+    public ConvertNewVillager convertNewVillager;
     ColorCode colorCodes = new ColorCode();
     public EventListenerHandler(AntiVillagerLag plugin) {
         this.plugin = plugin;
@@ -27,6 +29,7 @@ public class EventListenerHandler implements Listener {
         this.nameTagAI = new NameTagAI(plugin);
         this.restockVillager = new RestockVillager(plugin);
         this.villagerLevelManager = new VillagerLevelManager(plugin);
+        this.convertNewVillager = new ConvertNewVillager(plugin);
     }
 
     public void sanityChecks(Villager vil, long currentTime){
@@ -74,14 +77,16 @@ public class EventListenerHandler implements Listener {
 
 
         // Check if the villager is disabled for leveling and send a message
-        if (vilLevelCooldown > currentTime) {
-            String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
-            message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-            player.sendMessage(colorCodes.cm(message));
-            // why not ;)
-            vil.shakeHead();
-            e.setCancelled(true);
-            return;
+        if (VillagerUtilities.isDisabled(vil, plugin)) {
+            if (vilLevelCooldown > currentTime) {
+                String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
+                message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
+                player.sendMessage(colorCodes.cm(message));
+                // why not ;)
+                vil.shakeHead();
+                e.setCancelled(true);
+                return;
+            }
         }
 
         if(!VillagerUtilities.hasDisabledByBlock(vil, plugin)){
@@ -99,6 +104,9 @@ public class EventListenerHandler implements Listener {
         // handle Restock, check if Villager is disabled before
         if (VillagerUtilities.isDisabled(vil, plugin))
             restockVillager.call(vil, player);
+
+        if (VillagerUtilities.isDisabled(vil, plugin))
+            convertNewVillager.call(vil, player);
     }
 
     @EventHandler
