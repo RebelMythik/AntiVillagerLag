@@ -110,18 +110,20 @@ public class VillagerUtilities {
     public static boolean isDisabled(Villager vil, AntiVillagerLag plugin) {
         Location loc = vil.getLocation();
         // check if Villager is disabled with Nametag
-        if (vil.getCustomName() == null) {
-            return false;
+        if (vil.getCustomName() != null) {
+            String vilName = vil.getCustomName().replaceAll("(?i)[§&][0-9A-FK-ORX]", "");
+            if(plugin.getConfig().getStringList("NamesThatDisable").contains(vilName)){
+                return true;
+            }
         }
-        String vilName = vil.getCustomName().replaceAll("(?i)[§&][0-9A-FK-ORX]", "");
-        if(plugin.getConfig().getStringList("NamesThatDisable").contains(vilName)){
-            return true;
-        }
-        Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
+
         // else check if Villager is disabled with Block
+        Material belowvil = vil.getWorld().getBlockAt(loc.getBlockX(), (loc.getBlockY()-1), loc.getBlockZ()).getType();
         List<String> blocksThatDisable = plugin.getConfig().getStringList("BlocksThatDisable");
-        boolean willBeDisabled = blocksThatDisable.contains(belowvil.name());
-        return willBeDisabled;
+        if (blocksThatDisable.contains(belowvil.name())) return true;
+
+        // else check if Villager is disabled with a Workstation
+        return getDisabledByWorkstation(vil, plugin);
     }
     public static void setLevelCooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
         PersistentDataContainer container = v.getPersistentDataContainer();

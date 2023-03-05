@@ -31,7 +31,9 @@ public class RestockVillager {
         if (message.contains("%avlrestockmin%")) {
             message = replaceText(message, "%avlrestockmin%", Long.toString(min));
         }
-        message = replaceText(message, "%avlrestocksec%", Long.toString(sec));
+        if (message.contains("%avlrestocksec%")) {
+            message = replaceText(message, "%avlrestocksec%", Long.toString(sec));
+        }
         player.sendMessage(colorCodes.cm(message));
     }
 

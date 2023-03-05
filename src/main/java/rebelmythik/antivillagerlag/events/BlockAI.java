@@ -20,35 +20,6 @@ public class BlockAI {
         this.cooldown = plugin.getConfig().getLong("cooldown");
     }
 
-    private boolean hasCooldown(Villager vil, Player player){
-
-        // Permission to Bypass Cooldown.
-        if (player.hasPermission("avl.blockcooldown.bypass"))
-            return false;
-
-        // create variables
-        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
-
-        long currentTime = System.currentTimeMillis() / 1000;
-
-        // see if the cooldown is over and send message if it isn't
-        if (vilCooldown > currentTime) {
-
-            long totalSeconds = vilCooldown - currentTime;
-            long sec = totalSeconds % 60;
-            long min = (totalSeconds - sec) / 60;
-
-            String message = plugin.getConfig().getString("messages.cooldown-block-message");
-            if (message.contains("%avlminutes%")) {
-                message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
-            }
-            message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-            player.sendMessage(colorCodes.cm(message));
-            return true;
-        }
-        return false;
-    }
-
     public void call(Villager vil, Player player) {
 
         Location loc = vil.getLocation();
@@ -64,7 +35,7 @@ public class BlockAI {
             if (!willBeDisabled)
                 return;
             // check if villager has AI Toggle cooldown
-            if(hasCooldown(vil, player))
+            if(VillagerUtilities.hasCooldown(vil, player, plugin, colorCodes))
                 return;
             vil.setAware(false);
             // set all necessary flags and timers
@@ -77,7 +48,7 @@ public class BlockAI {
             if (willBeDisabled || !VillagerUtilities.getDisabledByBlock(vil, plugin))
                 return;
             // check if villager has AI Toggle cooldown
-            if(hasCooldown(vil, player))
+            if(VillagerUtilities.hasCooldown(vil, player, plugin, colorCodes))
                 return;
             // check if Villager was disabled by AVL
             // prevents breaking NPC plugins
