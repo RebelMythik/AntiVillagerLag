@@ -23,6 +23,8 @@ public class VillagerUtilities {
     private static final String MARKER_KEY = "Marker";
     private static final String DISABLED_BY_BLOCK_KEY = "disabledByBlock";
 
+    private static final String DISABLED_BY_WORKSTATION_KEY = "disabledByWorkstation";
+
     public static void setDisabledByBlock(Villager v, AntiVillagerLag plugin, Boolean disabledByBlock) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_BLOCK_KEY);
@@ -36,6 +38,22 @@ public class VillagerUtilities {
     public static boolean getDisabledByBlock(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_BLOCK_KEY);
+        return Boolean.parseBoolean(container.get(key, PersistentDataType.STRING));
+    }
+
+    public static void setDisabledByWorkstation(Villager v, AntiVillagerLag plugin, Boolean disabledByWorkstation) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_WORKSTATION_KEY);
+        container.set(key, PersistentDataType.STRING, disabledByWorkstation.toString());
+    }
+    public static boolean hasDisabledByWorkstation(Villager v, AntiVillagerLag plugin) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_WORKSTATION_KEY);
+        return container.has(key, PersistentDataType.STRING);
+    }
+    public static boolean getDisabledByWorkstation(Villager v, AntiVillagerLag plugin) {
+        PersistentDataContainer container = v.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, DISABLED_BY_WORKSTATION_KEY);
         return Boolean.parseBoolean(container.get(key, PersistentDataType.STRING));
     }
 
@@ -136,5 +154,32 @@ public class VillagerUtilities {
         container.remove(key);
     }
 
+    public static boolean hasCooldown(Villager vil, Player player, AntiVillagerLag plugin, ColorCode colorCodes){
 
+        // Permission to Bypass Cooldown.
+        if (player.hasPermission("avl.blockcooldown.bypass"))
+            return false;
+
+        // create variables
+        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
+
+        long currentTime = System.currentTimeMillis() / 1000;
+
+        // see if the cooldown is over and send message if it isn't
+        if (vilCooldown > currentTime) {
+
+            long totalSeconds = vilCooldown - currentTime;
+            long sec = totalSeconds % 60;
+            long min = (totalSeconds - sec) / 60;
+
+            String message = plugin.getConfig().getString("messages.cooldown-block-message");
+            if (message.contains("%avlminutes%")) {
+                message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
+            }
+            message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
+            player.sendMessage(colorCodes.cm(message));
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,12 +1,14 @@
 package rebelmythik.antivillagerlag.events;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
@@ -18,6 +20,8 @@ public class EventListenerHandler implements Listener {
     public AntiVillagerLag plugin;
     public BlockAI blockAi;
     public NameTagAI nameTagAI;
+
+    public RadiusWorkBlock radiusWorkBlock;
     public RestockVillager restockVillager;
     public VillagerLevelManager villagerLevelManager;
 
@@ -30,6 +34,7 @@ public class EventListenerHandler implements Listener {
         this.restockVillager = new RestockVillager(plugin);
         this.villagerLevelManager = new VillagerLevelManager(plugin);
         this.convertNewVillager = new ConvertNewVillager(plugin);
+        this.radiusWorkBlock = new RadiusWorkBlock(plugin);
     }
 
     public void sanityChecks(Villager vil, long currentTime){
@@ -48,10 +53,35 @@ public class EventListenerHandler implements Listener {
             VillagerUtilities.setNewTime(vil, plugin);
     }
 
+    @EventHandler
+    public void inventoryMove(InventoryClickEvent event) {
+        if (!plugin.getConfig().getBoolean("toggleableoptions.preventtrading")) return;
+        if (!(event.getInventory().getHolder() instanceof Villager)) return;
+        Villager vil = (Villager) event.getInventory().getHolder();
+        if (VillagerUtilities.isDisabled(vil, plugin)) return;
+        Player player = (Player) event.getWhoClicked();
+        event.setCancelled(true);
+        player.closeInventory();
+        player.sendMessage(colorCodes.cm(plugin.getConfig().getString("messages.VillagerMustBeDisabled")));
+    }
 
+    @EventHandler
+    public void villagerTradeClick(TradeSelectEvent event) {
+        if (!plugin.getConfig().getBoolean("toggleableoptions.preventtrading")) return;
+        if (!(event.getInventory().getHolder() instanceof Villager)) return;
+        Villager vil = (Villager) event.getInventory().getHolder();
+        if (VillagerUtilities.isDisabled(vil, plugin)) return;
+        Player player = (Player) event.getWhoClicked();
+        event.setCancelled(true);
+        player.closeInventory();
+        player.sendMessage(colorCodes.cm(plugin.getConfig().getString("messages.VillagerMustBeDisabled")));
+
+
+    }
 
     @EventHandler
     public void rightClick(PlayerInteractEntityEvent e){
+
         Player player = e.getPlayer();
         if(player.hasPermission("avl.disable"))
             return;
@@ -94,16 +124,22 @@ public class EventListenerHandler implements Listener {
         }
 
         // handle Nametag Ai, check if it is already disabled by block
-        if (plugin.getConfig().getBoolean("toggleableoptions.userenaming") && !VillagerUtilities.getDisabledByBlock(vil, plugin))
+        if (plugin.getConfig().getBoolean("toggleableoptions.userenaming") && !VillagerUtilities.getDisabledByBlock(vil, plugin) && !VillagerUtilities.getDisabledByBlock(vil, plugin))
             nameTagAI.call(vil, player, e);
 
         // handle Block Ai, check if nametag cancelled event (avoid duplicate error?)
-        if (plugin.getConfig().getBoolean("toggleableoptions.useblocks") && !e.isCancelled())
+        if (plugin.getConfig().getBoolean("toggleableoptions.useblocks") && !e.isCancelled() && !VillagerUtilities.getDisabledByWorkstation(vil, plugin))
             blockAi.call(vil, player);
 
+        // handle RadiusWorkBlock, check if disabled by workstation
+        if (plugin.getConfig().getBoolean("toggleableoptions.useworkstations") && !e.isCancelled() && !VillagerUtilities.getDisabledByBlock(vil, plugin)) {
+            radiusWorkBlock.call(vil, player);
+        }
+
         // handle Restock, check if Villager is disabled before
-        if (VillagerUtilities.isDisabled(vil, plugin))
+        if (VillagerUtilities.isDisabled(vil, plugin)) {
             restockVillager.call(vil, player);
+        }
 
         if (VillagerUtilities.isDisabled(vil, plugin))
             convertNewVillager.call(vil, player);

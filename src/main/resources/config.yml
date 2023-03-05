@@ -8,6 +8,22 @@ BlocksThatDisable:
   - EMERALD_BLOCK
   - COBBLESTONE
 
+# List of workstations that will disable mobs
+WorkstationsThatDisable:
+  - COMPOSTER
+  - SMOKER
+  - BARREL
+  - LOOM
+  - BLAST_FURNACE
+  - BREWING_STAND
+  - Cauldron
+  - FLETCHING_TABLE
+  - CARTOGRAPHY_TABLE
+  - LECTERN
+  - SMITHING_TABLE
+  - STONECUTTER
+  - GRINDSTONE
+
 # Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
 # See https://minecraft.fandom.com/wiki/Daylight_cycle for more info
 RestockTimes:
@@ -24,6 +40,8 @@ cooldown: 600
 RadiusLimit: 50
 
 toggleableoptions:
+  # Prevent trading with villagers when they aren't disabled. Still allows players to preview trades
+  preventtrading: true
   # If set to true, nametags will be used instead of being infinite.
   usenametags: false
 
@@ -34,6 +52,12 @@ toggleableoptions:
   # This will allow a block to disable and renable the Villager AI.
   useblocks: false
 
+  # This feature will disable the villager if they have a workstation in the configurable radius of the villager
+  useworkstations: false
+
+  #How many blocks in each direction the plugin will search for the workstation
+  workstationcheckradius: 2
+
 messages:
   no-permission: "&cYou don't have permission to use this command."
   reload-message: "&aPlugin successfully reloaded."
@@ -43,4 +67,5 @@ messages:
   next-restock: "&cThe next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
   correct-usage: "&cCorrect Usage is /avloptimize <radius>"
   radius-limit: "&cThe radius you tried is to big. Radius limit is 50 blocks."
+  VillagerMustBeDisabled: "&cYou need to disable the villager before you can trade with it"
 
