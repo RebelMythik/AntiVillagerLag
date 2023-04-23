@@ -10,7 +10,6 @@ import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 
 public class NameTagAI {
@@ -23,42 +22,7 @@ public class NameTagAI {
         this.cooldown = plugin.getConfig().getLong("cooldown");
     }
 
-
-    // automatically sends a message to the player
-    private boolean hasCooldown(Villager vil, Player player, PlayerInteractEntityEvent e){
-
-        // Permission to Bypass Cooldown.
-        if (player.hasPermission("avl.renamecooldown.bypass"))
-            return false;
-
-        // create variables
-        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
-        long currentTime = System.currentTimeMillis() / 1000;
-
-         // if the cooldown is over and send message if it isn't
-        if (vilCooldown > currentTime) {
-
-            long totalSeconds = vilCooldown - currentTime;
-            long sec = totalSeconds % 60;
-            long min = (totalSeconds - sec) / 60;
-
-            String message = plugin.getConfig().getString("messages.cooldown-message");
-            if (message.contains("%avlminutes%")) {
-                message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
-            }
-            message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
-            player.sendMessage(colorCodes.cm(message));
-            // player is trying to rename, stop them! (is safe to cancel)
-            e.setCancelled(true);
-            return true;
-        }
-        return false;
-    }
-
     public void call(Villager vil, Player player, PlayerInteractEntityEvent e) {
-
-        // Toggle Option To Disable this Class
-        if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return;
         ItemStack item = player.getInventory().getItemInMainHand();
 
         // Check that the player uses a named name-tag
@@ -66,12 +30,13 @@ public class NameTagAI {
             return;
 
         // Replenish the name-tag
-        if (!hasCooldown(vil, player, e)) {
+        if (!VillagerUtilities.onAiToggleCooldown(vil, player, plugin, colorCodes)) {
             VillagerUtilities.returnItem(player, plugin);
         }
         List<String> namesThatDisable = plugin.getConfig().getStringList("NamesThatDisable");
         String itemName = item.getItemMeta().getDisplayName().replaceAll("(?i)[§&][0-9A-FK-ORX]", "");
         boolean willBeDisabled = namesThatDisable.contains(itemName);
+        VillagerUtilities.setDisabledByNametag(vil, plugin, willBeDisabled);
 
         // Handle the correct AI state
         if(vil.isAware()) {
@@ -80,14 +45,14 @@ public class NameTagAI {
                 return;
             }
             // check if villager has AI Toggle cooldown
-            if (hasCooldown(vil, player, e)) {
+            if (VillagerUtilities.hasRestockCooldown(vil, plugin)) {
                 return;
             }
 
             vil.setAware(false);
             // set all necessary flags and timers
             VillagerUtilities.setMarker(vil, plugin);
-            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+            VillagerUtilities.setNewRestockCooldown(vil, plugin, cooldown);
         } else {
             // Re-Enabling AI
             // Check that the villager is disabled
@@ -95,7 +60,7 @@ public class NameTagAI {
                 return;
             }
             // check if villager has AI Toggle cooldown
-            if (hasCooldown(vil, player, e)) {
+            if (VillagerUtilities.onAiToggleCooldown(vil, player, plugin, colorCodes)) {
                 return;
             }
 
@@ -103,7 +68,7 @@ public class NameTagAI {
             // prevents breaking NPC plugins
             if (!VillagerUtilities.hasMarker(vil, plugin)) return;
             vil.setAware(true);
-            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+            VillagerUtilities.setNewRestockCooldown(vil, plugin, cooldown);
             // remove the marker again
             VillagerUtilities.removeMarker(vil, plugin);
         }

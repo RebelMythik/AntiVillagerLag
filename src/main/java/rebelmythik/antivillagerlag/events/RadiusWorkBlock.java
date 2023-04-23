@@ -47,32 +47,34 @@ public class RadiusWorkBlock {
             }
         }
 
+        VillagerUtilities.setDisabledByWorkstation(vil, plugin, willBeDisabled);
+
         // Handle the correct AI state
         if(vil.isAware()) {
             // Check that the villager is disabled
             if (!willBeDisabled)
                 return;
             // check if villager has AI Toggle cooldown
-            if(VillagerUtilities.hasCooldown(vil, player, plugin, colorCodes))
+            if(VillagerUtilities.onAiToggleCooldown(vil, player, plugin, colorCodes))
                 return;
             vil.setAware(false);
             // set all necessary flags and timers
             VillagerUtilities.setMarker(vil, plugin);
             VillagerUtilities.setDisabledByWorkstation(vil, plugin, true);
-            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+            VillagerUtilities.setNewRestockCooldown(vil, plugin, cooldown);
         } else {
             // Re-Enabling AI
             // Check that the villager is disabled and disabled by Block
             if (willBeDisabled || !VillagerUtilities.getDisabledByWorkstation(vil, plugin))
                 return;
             // check if villager has AI Toggle cooldown
-            if(VillagerUtilities.hasCooldown(vil, player, plugin, colorCodes))
+            if(VillagerUtilities.onAiToggleCooldown(vil, player, plugin, colorCodes))
                 return;
             // check if Villager was disabled by AVL
             // prevents breaking NPC plugins
             if (!VillagerUtilities.hasMarker(vil, plugin)) return;
             vil.setAware(true);
-            VillagerUtilities.setNewCooldown(vil, plugin, cooldown);
+            VillagerUtilities.setNewRestockCooldown(vil, plugin, cooldown);
             VillagerUtilities.setDisabledByWorkstation(vil, plugin, false);
             // remove the marker again
             VillagerUtilities.removeMarker(vil, plugin);

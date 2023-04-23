@@ -1,14 +1,11 @@
 package rebelmythik.antivillagerlag.events;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.*;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.ItemStack;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
 import rebelmythik.antivillagerlag.utils.VillagerUtilities;
@@ -26,7 +23,9 @@ public class EventListenerHandler implements Listener {
     public VillagerLevelManager villagerLevelManager;
 
     public ConvertNewVillager convertNewVillager;
+
     ColorCode colorCodes = new ColorCode();
+
     public EventListenerHandler(AntiVillagerLag plugin) {
         this.plugin = plugin;
         this.blockAi = new BlockAI(plugin);
@@ -40,14 +39,14 @@ public class EventListenerHandler implements Listener {
     public void sanityChecks(Villager vil, long currentTime){
 
         long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
-        long vilCooldown = VillagerUtilities.getCooldown(vil, plugin);
+        long vilCooldown = VillagerUtilities.getRestockCooldown(vil, plugin);
         long vilTime = VillagerUtilities.getTime(vil, plugin);
 
         if(vilLevelCooldown > currentTime + villagerLevelManager.cooldown * 2)
             VillagerUtilities.setLevelCooldown(vil, plugin, villagerLevelManager.cooldown);
 
         if(vilCooldown > currentTime + blockAi.cooldown * 2)
-            VillagerUtilities.setNewCooldown(vil, plugin, blockAi.cooldown);
+            VillagerUtilities.setNewRestockCooldown(vil, plugin, blockAi.cooldown);
 
         if(vilTime > vil.getWorld().getFullTime())
             VillagerUtilities.setNewTime(vil, plugin);
@@ -64,7 +63,6 @@ public class EventListenerHandler implements Listener {
         player.closeInventory();
         player.sendMessage(colorCodes.cm(plugin.getConfig().getString("messages.VillagerMustBeDisabled")));
     }
-
     @EventHandler
     public void villagerTradeClick(TradeSelectEvent event) {
         if (!plugin.getConfig().getBoolean("toggleableoptions.preventtrading")) return;
@@ -75,10 +73,7 @@ public class EventListenerHandler implements Listener {
         event.setCancelled(true);
         player.closeInventory();
         player.sendMessage(colorCodes.cm(plugin.getConfig().getString("messages.VillagerMustBeDisabled")));
-
-
     }
-
     @EventHandler
     public void rightClick(PlayerInteractEntityEvent e){
 
@@ -90,59 +85,67 @@ public class EventListenerHandler implements Listener {
 
         Villager vil = (Villager) e.getRightClicked();
 
-        // check whether this villager has cooldown tags
-        if (!VillagerUtilities.hasCooldown(vil, plugin)) VillagerUtilities.setNewCooldown(vil, plugin, (long)0);
+        // check whether this villager has tags
+        if (!VillagerUtilities.hasRestockCooldown(vil, plugin)) VillagerUtilities.setNewRestockCooldown(vil, plugin, (long)0);
         if (!VillagerUtilities.hasLevelCooldown(vil, plugin)) VillagerUtilities.setLevelCooldown(vil, plugin, (long)0);
         if (!VillagerUtilities.hasTime(vil, plugin)) VillagerUtilities.setNewTime(vil, plugin);
+        if (!VillagerUtilities.hasDisabledByNametag(vil, plugin)) VillagerUtilities.setDisabledByNametag(vil, plugin, false);
+        if (!VillagerUtilities.hasDisabledByBlock(vil, plugin)) VillagerUtilities.setDisabledByBlock(vil, plugin, false);
+        if (!VillagerUtilities.hasDisabledByWorkstation(vil, plugin)) VillagerUtilities.setDisabledByWorkstation(vil, plugin, false);
+        if (!VillagerUtilities.hasDisabledByCommand(vil, plugin)) VillagerUtilities.setDisabledByCommand(vil, plugin, false);
 
         long currentTime = System.currentTimeMillis() / 1000;
 
-        // if time is broken fix it!
+        // If time or AI is broken fix it
         sanityChecks(vil, currentTime);
+        convertNewVillager.call(vil, player);
 
-        long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
+        long timeThatVilLevelCooldownEnds = VillagerUtilities.getLevelCooldown(vil, plugin);
 
-        long totalSeconds = vilLevelCooldown - currentTime;
-        long sec = totalSeconds % 60;
-
+        long timeTillVilLevelCooldownEnds = timeThatVilLevelCooldownEnds - currentTime;
 
         // Check if the villager is disabled for leveling and send a message
         if (VillagerUtilities.isDisabled(vil, plugin)) {
-            if (vilLevelCooldown > currentTime) {
+            if (timeThatVilLevelCooldownEnds > currentTime) {
                 String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
-                message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(sec));
+                message = VillagerUtilities.replaceText(message, "%avlseconds%", Long.toString(timeTillVilLevelCooldownEnds));
                 player.sendMessage(colorCodes.cm(message));
-                // why not ;)
                 vil.shakeHead();
                 e.setCancelled(true);
                 return;
             }
         }
 
-        if(!VillagerUtilities.hasDisabledByBlock(vil, plugin)){
-            VillagerUtilities.setDisabledByBlock(vil, plugin, false);
-        }
-
         // handle Nametag Ai, check if it is already disabled by block
-        if (plugin.getConfig().getBoolean("toggleableoptions.userenaming") && !VillagerUtilities.getDisabledByBlock(vil, plugin) && !VillagerUtilities.getDisabledByBlock(vil, plugin))
+        if (plugin.getConfig().getBoolean("toggleableoptions.userenaming")) {
+            //change to update DISABLED_BY_NAMETAG_KEY
             nameTagAI.call(vil, player, e);
-
+        }
         // handle Block Ai, check if nametag cancelled event (avoid duplicate error?)
-        if (plugin.getConfig().getBoolean("toggleableoptions.useblocks") && !e.isCancelled() && !VillagerUtilities.getDisabledByWorkstation(vil, plugin))
+        if (plugin.getConfig().getBoolean("toggleableoptions.useblocks")) {
+            //change to update DISABLED_BY_BLOCK_KEY
             blockAi.call(vil, player);
-
+        }
         // handle RadiusWorkBlock, check if disabled by workstation
-        if (plugin.getConfig().getBoolean("toggleableoptions.useworkstations") && !e.isCancelled() && !VillagerUtilities.getDisabledByBlock(vil, plugin)) {
+        if (plugin.getConfig().getBoolean("toggleableoptions.useworkstations")) {
+            //change to update DISABLED_BY_WORKSTATION_KEY
             radiusWorkBlock.call(vil, player);
         }
+        //RadiusOptimizeCommand, check if disabled by workstation (for later)
+
+        // disable if it should be disabled
+        if (VillagerUtilities.isDisabled(vil, plugin)) {
+            VillagerUtilities.disableTheVillager(vil, plugin);
+        } else {
+            VillagerUtilities.undisableTheVillager(vil, plugin);
+        }
+
 
         // handle Restock, check if Villager is disabled before
         if (VillagerUtilities.isDisabled(vil, plugin)) {
             restockVillager.call(vil, player);
         }
 
-        if (VillagerUtilities.isDisabled(vil, plugin))
-            convertNewVillager.call(vil, player);
     }
 
     @EventHandler
@@ -164,6 +167,17 @@ public class EventListenerHandler implements Listener {
         if (!VillagerUtilities.hasLevelCooldown(vil, plugin)) VillagerUtilities.setLevelCooldown(vil, plugin, (long)0);
 
         villagerLevelManager.call(vil, player);
+    }
+
+    @EventHandler
+    public void onCancelVillagerDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Villager && event.getDamager() instanceof Zombie)) return;
+
+        Villager vil = (Villager) event.getEntity();
+
+        if (VillagerUtilities.hasMarker(vil, plugin)) {
+            event.setCancelled(true);
+        }
     }
 }
 

@@ -56,10 +56,10 @@ public class RadiusOptimizeCommand implements CommandExecutor {
                     if (entity instanceof Villager) {
                         if(((Villager) entity).isAware()) {
                             // If they don't have cooldown set it
-                            if (!VillagerUtilities.hasCooldown((Villager) vil, plugin)) {
-                                VillagerUtilities.setNewCooldown((Villager) vil, plugin, (long)0);
+                            if (!VillagerUtilities.hasRestockCooldown((Villager) vil, plugin)) {
+                                VillagerUtilities.setNewRestockCooldown((Villager) vil, plugin, (long)0);
                             }
-                            long cooldown = VillagerUtilities.getCooldown((Villager) vil, plugin);
+                            long cooldown = VillagerUtilities.getRestockCooldown((Villager) vil, plugin);
                             long currentTime = System.currentTimeMillis() / 1000;
 
                             // If villager has already been disabled check if they do have a cooldown
@@ -73,7 +73,7 @@ public class RadiusOptimizeCommand implements CommandExecutor {
 
                             // set all necessary flags and timers
                             VillagerUtilities.setMarker((Villager) vil, plugin);
-                            VillagerUtilities.setNewCooldown((Villager) vil, plugin, cooldown);
+                            VillagerUtilities.setNewRestockCooldown((Villager) vil, plugin, cooldown);
                         }
 
                     }

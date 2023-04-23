@@ -23,7 +23,7 @@ public final class AntiVillagerLag extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         this.getServer().getPluginManager().registerEvents(new EventListenerHandler(this),this);
-        this.getServer().getPluginManager().registerEvents(new CancelVillagerDamage(this),this);
+
         getCommand("avlreload").setExecutor(new ReloadCommand(this));
         getCommand("avloptimize").setExecutor(new RadiusOptimizeCommand(this));
         saveDefaultConfig();

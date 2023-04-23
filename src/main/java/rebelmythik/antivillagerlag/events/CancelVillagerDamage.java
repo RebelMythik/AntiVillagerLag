@@ -16,14 +16,5 @@ public class CancelVillagerDamage implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
-    public void onCancelVillagerDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Villager && event.getDamager() instanceof Zombie)) return;
 
-        Villager vil = (Villager) event.getEntity();
-
-        if (VillagerUtilities.hasMarker(vil, plugin)) {
-            event.setCancelled(true);
-        }
-    }
 }
