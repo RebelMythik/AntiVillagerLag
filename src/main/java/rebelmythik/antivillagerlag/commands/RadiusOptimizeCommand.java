@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import rebelmythik.antivillagerlag.AntiVillagerLag;
 import rebelmythik.antivillagerlag.utils.ColorCode;
@@ -25,15 +26,25 @@ public class RadiusOptimizeCommand implements CommandExecutor {
     }
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        String playerName = sender.getName();
+        // make sure command is executed by a player
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Command needs to be run as a player");
+            return false;
+        }
+        Player player = (Player) sender;
 
+        // check the command
         if (cmd.getName().equalsIgnoreCase("avloptimize")) {
-            if(!sender.hasPermission("avl.optimize")) {
-                sender.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.no-permission")));
+
+            // check for permission
+            if(!player.hasPermission("avl.optimize")) {
+                player.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.no-permission")));
                 return true;
             }
+
+            // handle usage
             if (args.length == 0) {
-                sender.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.correct-usage")));
+                player.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.correct-usage")));
                 return false;
             }
             if (args.length == 1) {
@@ -41,41 +52,30 @@ public class RadiusOptimizeCommand implements CommandExecutor {
                 try {
                     Integer.parseInt(args[0]);
                 } catch (NumberFormatException numberFormatException) {
-                    sender.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.correct-usage")));
+                    player.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.correct-usage")));
                     return false;
                 }
                 double radius = Double.parseDouble(args[0]);
 
                 if (radius > plugin.getConfig().getDouble("RadiusLimit")) {
-                    sender.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.radius-limit")));
+                    player.sendMessage(colorcodes.cm(plugin.getConfig().getString("messages.radius-limit")));
                     return false;
                 }
 
-                for (Entity entity : Bukkit.getPlayer(playerName).getNearbyEntities(radius, radius, radius)) {
-                    Entity vil = entity;
+                for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
                     if (entity instanceof Villager) {
-                        if(((Villager) entity).isAware()) {
-                            // If they don't have cooldown set it
-                            if (!VillagerUtilities.hasRestockCooldown((Villager) vil, plugin)) {
-                                VillagerUtilities.setNewRestockCooldown((Villager) vil, plugin, (long)0);
-                            }
-                            long cooldown = VillagerUtilities.getRestockCooldown((Villager) vil, plugin);
-                            long currentTime = System.currentTimeMillis() / 1000;
-
-                            // If villager has already been disabled check if they do have a cooldown
-                            // to prevent bypassing of the cooldown feature
-                            if (cooldown > currentTime) return false;
+                        Villager vil = (Villager) entity;
+                        // check whether this villager has tags
+                        VillagerUtilities.verifyTags(vil, plugin);
+                        if(!VillagerUtilities.isDisabled(vil, plugin)) {
 
                             // Set Villager Name to Optimize Name and disable the AI
                             List<String> namesThatDisable = plugin.getConfig().getStringList("NamesThatDisable");
-                            entity.setCustomName(namesThatDisable.get(0));
-                            ((Villager) entity).setAware(false);
+                            vil.setCustomName(namesThatDisable.get(0));
+                            VillagerUtilities.disableTheVillager(vil, plugin, 10L);
+                            VillagerUtilities.setDisabledByNametag(vil, plugin, true);
 
-                            // set all necessary flags and timers
-                            VillagerUtilities.setMarker((Villager) vil, plugin);
-                            VillagerUtilities.setNewRestockCooldown((Villager) vil, plugin, cooldown);
                         }
-
                     }
                 }
             }

@@ -1,7 +1,7 @@
 name: AntiVillagerLag
 version: '${project.version}'
 main: rebelmythik.antivillagerlag.AntiVillagerLag
-api-version: 1.17
+api-version: 1.19
 
 commands:
   avlreload:
@@ -22,8 +22,8 @@ permissions:
   avl.renamecooldown.bypass:
     description: Allows the player to bypass the cooldown on renaming villagers
     default: false
-  avl.blockcooldown.bypass:
-    description: Allows the player to bypass the cooldown on renaming villagers
+  avl.togglecooldown.bypass:
+    description: Allows the player to bypass the cooldown on toggling villager ai
     default: false
   avl.message.nextrestock:
     description: Tells the player when the villager is restocking next

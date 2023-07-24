@@ -16,7 +16,7 @@ WorkstationsThatDisable:
   - LOOM
   - BLAST_FURNACE
   - BREWING_STAND
-  - Cauldron
+  - CAULDRON
   - FLETCHING_TABLE
   - CARTOGRAPHY_TABLE
   - LECTERN
@@ -30,11 +30,6 @@ RestockTimes:
   times:
     - 1000
     - 13000
-
-# This time is in seconds. This cooldown for renaming is to prevent possible abuse
-# of people repeatedly disabling ai and re-enabling it to get double trades. I would keep this
-# at the minimum time of 10 minutes or 600 seconds due anything less allowing for the double trades to happen.
-cooldown: 600
 
 # The maximum radius in blocks the /avloptimize command can search
 RadiusLimit: 50
@@ -61,8 +56,8 @@ toggleableoptions:
 messages:
   no-permission: "&cYou don't have permission to use this command."
   reload-message: "&aPlugin successfully reloaded."
-  cooldown-message: "&cYou can rename the villager again in %avlminutes% minutes and %avlseconds% seconds."
-  cooldown-block-message: "&cYou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
+  cooldown-rename-message: "&cYou can rename the villager again in %avlminutes% minutes and %avlseconds% seconds."
+  cooldown-toggle-message: "&cYou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
   cooldown-levelup-message: "&cThe villager is currently leveling up! You can use the villager again in %avlseconds% seconds."
   next-restock: "&cThe next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
   correct-usage: "&cCorrect Usage is /avloptimize <radius>"

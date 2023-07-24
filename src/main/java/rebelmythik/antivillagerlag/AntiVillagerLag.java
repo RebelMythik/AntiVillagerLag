@@ -7,9 +7,9 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import rebelmythik.antivillagerlag.autoevents.VillagerScanner;
 import rebelmythik.antivillagerlag.commands.RadiusOptimizeCommand;
 import rebelmythik.antivillagerlag.commands.ReloadCommand;
-import rebelmythik.antivillagerlag.events.CancelVillagerDamage;
 import rebelmythik.antivillagerlag.events.EventListenerHandler;
 
 import java.io.File;
@@ -19,10 +19,14 @@ import java.util.Map;
 
 public final class AntiVillagerLag extends JavaPlugin {
 
+    private VillagerScanner villagerScanner;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
         this.getServer().getPluginManager().registerEvents(new EventListenerHandler(this),this);
+        villagerScanner = new VillagerScanner(this);
+        villagerScanner.startTaskTimer();
 
         getCommand("avlreload").setExecutor(new ReloadCommand(this));
         getCommand("avloptimize").setExecutor(new RadiusOptimizeCommand(this));
@@ -45,6 +49,7 @@ public final class AntiVillagerLag extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        villagerScanner.cancelTaskTimer();
     }
 
     public Configuration cfg = this.getConfig().getDefaults();

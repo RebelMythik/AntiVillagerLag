@@ -26,18 +26,18 @@ public class VillagerUtilities {
 
     // looks good to me
 
-    // Trade Cooldown Tag (Time when next restock will happen)
-    public static boolean hasRestockCooldown(Villager v, AntiVillagerLag plugin) {
+    // AI Toggle Cooldown Tag (Time when the villager's AI can be toggled again)
+    public static boolean hasAICooldown(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, COOLDOWN_KEY);
         return container.has(key, PersistentDataType.LONG);
     }
-    public static void setNewRestockCooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
+    public static void setNewAICooldown(Villager v, AntiVillagerLag plugin, Long cooldown) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, COOLDOWN_KEY);
         container.set(key, PersistentDataType.LONG, (System.currentTimeMillis() / 1000) + cooldown);
     }
-    public static long getRestockCooldown(Villager v, AntiVillagerLag plugin) {
+    public static long getAICooldown(Villager v, AntiVillagerLag plugin) {
         PersistentDataContainer container = v.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(plugin, COOLDOWN_KEY);
         return container.get(key, PersistentDataType.LONG);
@@ -179,24 +179,20 @@ public class VillagerUtilities {
         return getDisabledByNametag(vil, plugin) || getDisabledByBlock(vil, plugin) || getDisabledByWorkstation(vil, plugin) || getDisabledByCommand(vil, plugin);
     }
     public static boolean onAiToggleCooldown(Villager vil, Player player, AntiVillagerLag plugin, ColorCode colorCodes) {
-
         // Permission to Bypass Cooldown.
-        if (player.hasPermission("avl.blockcooldown.bypass"))
+        if (player.hasPermission("avl.togglecooldown.bypass"))
             return false;
 
         // create variables
-        long vilCooldown = VillagerUtilities.getRestockCooldown(vil, plugin);
-
+        long vilCooldown = VillagerUtilities.getAICooldown(vil, plugin);
         long currentTime = System.currentTimeMillis() / 1000;
+        long totalSeconds = vilCooldown - currentTime;
+        long sec = totalSeconds % 60;
+        long min = (totalSeconds - sec) / 60;
 
         // see if the cooldown is over and send message if it isn't
         if (vilCooldown > currentTime) {
-
-            long totalSeconds = vilCooldown - currentTime;
-            long sec = totalSeconds % 60;
-            long min = (totalSeconds - sec) / 60;
-
-            String message = plugin.getConfig().getString("messages.cooldown-block-message");
+            String message = plugin.getConfig().getString("messages.cooldown-toggle-message");
             if (message.contains("%avlminutes%")) {
                 message = VillagerUtilities.replaceText(message, "%avlminutes%", Long.toString(min));
             }
@@ -212,10 +208,30 @@ public class VillagerUtilities {
             r.setUses(0);
         }
     }
-    public static void disableTheVillager(Villager vil, AntiVillagerLag plugin) {
-
+    public static void disableTheVillager(Villager vil, AntiVillagerLag plugin, long cooldown) {
+        if (!vil.isAware()) return;
+        vil.setAware(false);
+        // set all necessary flags and timers
+        VillagerUtilities.setMarker(vil, plugin);
+        VillagerUtilities.setNewAICooldown(vil, plugin, cooldown);
     }
-    public static void undisableTheVillager(Villager vil, AntiVillagerLag plugin) {
+    public static void undisableTheVillager(Villager vil, AntiVillagerLag plugin, long cooldown) {
+        if (vil.isAware()) return;
+        if (!VillagerUtilities.hasMarker(vil, plugin)) return;
+        vil.setAware(true);
+        // remove the marker again
+        VillagerUtilities.removeMarker(vil, plugin);
+        VillagerUtilities.setNewAICooldown(vil, plugin, cooldown);
+    }
 
+    public static void verifyTags(Villager vil, AntiVillagerLag plugin) {
+        // check whether this villager has tags
+        if (!VillagerUtilities.hasAICooldown(vil, plugin)) VillagerUtilities.setNewAICooldown(vil, plugin, (long)0);
+        if (!VillagerUtilities.hasLevelCooldown(vil, plugin)) VillagerUtilities.setLevelCooldown(vil, plugin, (long)0);
+        if (!VillagerUtilities.hasTime(vil, plugin)) VillagerUtilities.setNewTime(vil, plugin);
+        if (!VillagerUtilities.hasDisabledByNametag(vil, plugin)) VillagerUtilities.setDisabledByNametag(vil, plugin, false);
+        if (!VillagerUtilities.hasDisabledByBlock(vil, plugin)) VillagerUtilities.setDisabledByBlock(vil, plugin, false);
+        if (!VillagerUtilities.hasDisabledByWorkstation(vil, plugin)) VillagerUtilities.setDisabledByWorkstation(vil, plugin, false);
+        if (!VillagerUtilities.hasDisabledByCommand(vil, plugin)) VillagerUtilities.setDisabledByCommand(vil, plugin, false);
     }
 }

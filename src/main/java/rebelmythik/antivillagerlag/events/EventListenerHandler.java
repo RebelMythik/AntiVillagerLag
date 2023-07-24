@@ -21,9 +21,6 @@ public class EventListenerHandler implements Listener {
     public RadiusWorkBlock radiusWorkBlock;
     public RestockVillager restockVillager;
     public VillagerLevelManager villagerLevelManager;
-
-    public ConvertNewVillager convertNewVillager;
-
     ColorCode colorCodes = new ColorCode();
 
     public EventListenerHandler(AntiVillagerLag plugin) {
@@ -32,24 +29,25 @@ public class EventListenerHandler implements Listener {
         this.nameTagAI = new NameTagAI(plugin);
         this.restockVillager = new RestockVillager(plugin);
         this.villagerLevelManager = new VillagerLevelManager(plugin);
-        this.convertNewVillager = new ConvertNewVillager(plugin);
         this.radiusWorkBlock = new RadiusWorkBlock(plugin);
     }
 
     public void sanityChecks(Villager vil, long currentTime){
-
         long vilLevelCooldown = VillagerUtilities.getLevelCooldown(vil, plugin);
-        long vilCooldown = VillagerUtilities.getRestockCooldown(vil, plugin);
+        long vilCooldown = VillagerUtilities.getAICooldown(vil, plugin);
         long vilTime = VillagerUtilities.getTime(vil, plugin);
 
-        if(vilLevelCooldown > currentTime + villagerLevelManager.cooldown * 2)
+        if(vilLevelCooldown > currentTime + villagerLevelManager.cooldown * 2) {
             VillagerUtilities.setLevelCooldown(vil, plugin, villagerLevelManager.cooldown);
+        }
 
-        if(vilCooldown > currentTime + blockAi.cooldown * 2)
-            VillagerUtilities.setNewRestockCooldown(vil, plugin, blockAi.cooldown);
+        if(vilCooldown > currentTime + blockAi.cooldown * 2) {
+            VillagerUtilities.setNewAICooldown(vil, plugin, blockAi.cooldown);
+        }
 
-        if(vilTime > vil.getWorld().getFullTime())
+        if(vilTime > vil.getWorld().getFullTime()) {
             VillagerUtilities.setNewTime(vil, plugin);
+        }
     }
 
     @EventHandler
@@ -76,33 +74,25 @@ public class EventListenerHandler implements Listener {
     }
     @EventHandler
     public void rightClick(PlayerInteractEntityEvent e){
-
-        Player player = e.getPlayer();
-        if(player.hasPermission("avl.disable"))
-            return;
-        // do checks and setup
         if (!e.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
 
+        // do checks and setup
         Villager vil = (Villager) e.getRightClicked();
+        Player player = e.getPlayer();
+        if(player.hasPermission("avl.disable")) return;
+        long currentTime = System.currentTimeMillis() / 1000;
+        long timeThatVilLevelCooldownEnds = VillagerUtilities.getLevelCooldown(vil, plugin);
+        long timeTillVilLevelCooldownEnds = timeThatVilLevelCooldownEnds - currentTime;
 
         // check whether this villager has tags
-        if (!VillagerUtilities.hasRestockCooldown(vil, plugin)) VillagerUtilities.setNewRestockCooldown(vil, plugin, (long)0);
-        if (!VillagerUtilities.hasLevelCooldown(vil, plugin)) VillagerUtilities.setLevelCooldown(vil, plugin, (long)0);
-        if (!VillagerUtilities.hasTime(vil, plugin)) VillagerUtilities.setNewTime(vil, plugin);
-        if (!VillagerUtilities.hasDisabledByNametag(vil, plugin)) VillagerUtilities.setDisabledByNametag(vil, plugin, false);
-        if (!VillagerUtilities.hasDisabledByBlock(vil, plugin)) VillagerUtilities.setDisabledByBlock(vil, plugin, false);
-        if (!VillagerUtilities.hasDisabledByWorkstation(vil, plugin)) VillagerUtilities.setDisabledByWorkstation(vil, plugin, false);
-        if (!VillagerUtilities.hasDisabledByCommand(vil, plugin)) VillagerUtilities.setDisabledByCommand(vil, plugin, false);
-
-        long currentTime = System.currentTimeMillis() / 1000;
+        VillagerUtilities.verifyTags(vil, plugin);
 
         // If time or AI is broken fix it
         sanityChecks(vil, currentTime);
-        convertNewVillager.call(vil, player);
-
-        long timeThatVilLevelCooldownEnds = VillagerUtilities.getLevelCooldown(vil, plugin);
-
-        long timeTillVilLevelCooldownEnds = timeThatVilLevelCooldownEnds - currentTime;
+        if (!vil.hasAI()) {
+            vil.setAI(true);
+            vil.setAware(false);
+        }
 
         // Check if the villager is disabled for leveling and send a message
         if (VillagerUtilities.isDisabled(vil, plugin)) {
@@ -118,34 +108,31 @@ public class EventListenerHandler implements Listener {
 
         // handle Nametag Ai, check if it is already disabled by block
         if (plugin.getConfig().getBoolean("toggleableoptions.userenaming")) {
-            //change to update DISABLED_BY_NAMETAG_KEY
             nameTagAI.call(vil, player, e);
         }
         // handle Block Ai, check if nametag cancelled event (avoid duplicate error?)
         if (plugin.getConfig().getBoolean("toggleableoptions.useblocks")) {
-            //change to update DISABLED_BY_BLOCK_KEY
             blockAi.call(vil, player);
         }
         // handle RadiusWorkBlock, check if disabled by workstation
         if (plugin.getConfig().getBoolean("toggleableoptions.useworkstations")) {
-            //change to update DISABLED_BY_WORKSTATION_KEY
             radiusWorkBlock.call(vil, player);
         }
         //RadiusOptimizeCommand, check if disabled by workstation (for later)
 
         // disable if it should be disabled
-        if (VillagerUtilities.isDisabled(vil, plugin)) {
-            VillagerUtilities.disableTheVillager(vil, plugin);
-        } else {
-            VillagerUtilities.undisableTheVillager(vil, plugin);
+        if (!VillagerUtilities.onAiToggleCooldown(vil, player, plugin, colorCodes)) {
+            if (VillagerUtilities.isDisabled(vil, plugin)) {
+                VillagerUtilities.disableTheVillager(vil, plugin, 10L);
+            } else {
+                VillagerUtilities.undisableTheVillager(vil, plugin, 10L);
+            }
         }
-
 
         // handle Restock, check if Villager is disabled before
         if (VillagerUtilities.isDisabled(vil, plugin)) {
             restockVillager.call(vil, player);
         }
-
     }
 
     @EventHandler
