@@ -40,10 +40,8 @@ public class RestockVillager {
     public boolean handleRestock(Villager vil, long currDayTimeTick, AntiVillagerLag plugin) {
 
         long curTick = vil.getWorld().getFullTime();
-
         // get the tick time of the current day
         long currentDay = curTick - currDayTimeTick;
-
         // get last time the villager was restocked
         long vilTick = VillagerUtilities.getTime(vil, plugin);
 
