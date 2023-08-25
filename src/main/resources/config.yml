@@ -63,4 +63,5 @@ messages:
   correct-usage: "&cCorrect Usage is /avloptimize <radius>"
   radius-limit: "&cThe radius you tried is to big. Radius limit is 50 blocks."
   VillagerMustBeDisabled: "&cYou need to disable the villager before you can trade with it"
+  TestForConfigUpdate: "This is a test message"
 

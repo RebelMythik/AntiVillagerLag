@@ -14,6 +14,8 @@ import rebelmythik.antivillagerlag.events.EventListenerHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,12 +63,28 @@ public final class AntiVillagerLag extends JavaPlugin {
                 tmp.load(getDataFolder() + "/config.yml");
                 for(String str : cfg.getKeys(true)) {
                     if(!tmp.getKeys(true).contains(str)) {
-                        tmp.set(str, cfg.get(str));
-                        changesMade = true;
+                        Object value = cfg.get(str);
+                        if (value instanceof String) {
+                            String stringValue = (String) value;
+                            if (!stringValue.startsWith("'") || !stringValue.endsWith("'")) {
+                                // Use a placeholder to avoid triple single quotes
+                                tmp.set(str, "__PLACEHOLDER__" + stringValue + "__PLACEHOLDER__");
+                                changesMade = true;
+                            }
+                        } else {
+                            tmp.set(str, value);
+                            changesMade = true;
+                        }
                     }
                 }
+                tmp.save(getDataFolder() + "/config.yml");
                 if(changesMade)
                     tmp.save(getDataFolder() + "/config.yml");
+
+                // Read and re-write config to format the values correctly
+                String content = new String(Files.readAllBytes(Paths.get(getDataFolder() + "/config.yml")));
+                content = content.replaceAll("__PLACEHOLDER__", "'");
+                Files.write(Paths.get(getDataFolder() + "/config.yml"), content.getBytes());
             }
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
