@@ -1,0 +1,70 @@
+# These names will cause the villager to be disabled when named with a nametag
+NamesThatDisable:
+  -
+  - Optimize
+  - Bonk
+
+# This needs to be a valid block ID to work.
+BlocksThatDisable:
+  - EMERALD_BLOCK
+  - DIAMOND_BLOCK
+
+# List of workstations that will disable mobs
+WorkstationsThatDisable:
+  - COMPOSTER
+  - SMOKER
+  - BARREL
+  - LOOM
+  - BLAST_FURNACE
+  - BREWING_STAND
+  - Cauldron
+  - FLETCHING_TABLE
+  - CARTOGRAPHY_TABLE
+  - LECTERN
+  - SMITHING_TABLE
+  - STONECUTTER
+  - GRINDSTONE
+
+# Please do the time in ticks or it will break the plugin. There is 24,000 ticks in a single day.
+# See https://minecraft.fandom.com/wiki/Daylight_cycle for more info
+RestockTimes:
+  times:
+    - 1000
+    - 13000
+
+# This time is in seconds. This cooldown is to prevent possible abuse
+# of people repeatedly disabling ai and re-enabling it to get double trades. I would keep this
+# at the minimum time of 10 minutes or 600 seconds due anything less allowing for the double trades to happen.
+ai-toggle-cooldown: 600
+
+# The maximum radius in blocks the /avloptimize command can search
+RadiusLimit: 50
+
+toggleableoptions:
+  # Prevent trading with villagers when they aren't disabled. Still allows players to preview trades
+  preventtrading: true
+
+  # If set to true, nametags will be used instead of being infinite.
+  usenametags: false
+
+  # One of these following options needs to be true for the plugin to work.
+  ### This will allow nametags to disable and renable the Villager AI. This also effects the /avloptimize command
+  userenaming: true
+
+  ### This will allow a block to disable and renable the Villager AI.
+  useblocks: false
+
+  ### This feature will disable the villager if they have a workstation in the configurable radius in blocks of the villager
+  useworkstations: false
+  workstationcheckradius: 2
+
+messages:
+  no-permission: "&cYou don't have permission to use this command."
+  reload-message: "&aPlugin successfully reloaded."
+  cooldown-ai-message: "&cou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
+  cooldown-levelup-message: "&cThe villager is currently leveling up! You can use the villager again in %avlseconds% seconds."
+  next-restock: "&cThe next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
+  optimize-command-usage: "&cCorrect Usage is /avloptimize <radius>"
+  unoptimize-command-usage: "&cCorrect Usage is /avlunoptimize <radius>"
+  radius-limit: "&cThe radius you tried is to big. Radius limit is 50 blocks."
+  VillagerMustBeDisabled: "&cYou need to disable the villager before you can trade with it"

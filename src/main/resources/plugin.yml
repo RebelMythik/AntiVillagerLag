@@ -1,0 +1,30 @@
+name: AntiVillagerLag
+version: '1.0-SNAPSHOT'
+main: rebelmythik.antiVillagerLag.AntiVillagerLag
+api-version: '1.20'
+authors: [ RebelMythik, CaveRaider ]
+description: Bonk Villagers
+
+commands:
+  avlreload:
+    description: "Reloads the AVL plugin"
+    usage: "/avlreload"
+    permission: avl.reload
+  avloptimize:
+    description: "Will optimize all villagers within a configurable radius by renaming them"
+    usage: "/avloptimize"
+    permission: avl.optimize
+  avlunoptimize:
+    description: "Will unoptimize all villagers within a configurable radius by renaming them"
+    usage: "/avlunoptimize"
+    permission: avl.unoptimize
+  avlremove:
+    description: "Will remove all changes done by the plugin server wide"
+    usage: "/avlremove"
+    permission: avl.remove
+
+permissions:
+  avl.cooldown.bypass:
+    default: false
+  avl.message.restock:
+    default: true
