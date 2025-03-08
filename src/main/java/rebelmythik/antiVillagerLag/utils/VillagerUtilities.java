@@ -123,6 +123,13 @@ public class VillagerUtilities {
         }
     }
 
+    public static void updateRestockTimes(AntiVillagerLag plugin) {
+        restock_times.clear();
+        for (long restockTime : plugin.getConfig().getLongList("RestockTimes.times")) {
+            restock_times.add(restockTime);
+        }
+    }
+
     ///     Clean Up
 
     public static void CleanseTheVillagers(Villager v, AntiVillagerLag plugin) {

@@ -1,5 +1,6 @@
 package rebelmythik.antiVillagerLag.events;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
@@ -10,7 +11,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.TradeSelectEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import rebelmythik.antiVillagerLag.AntiVillagerLag;
+import rebelmythik.antiVillagerLag.utils.UpdateChecker;
 import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
 
 public class EventListener implements Listener {
@@ -63,6 +66,7 @@ public class EventListener implements Listener {
         boolean block_result = BlockAI.call(villager, plugin, player);
         boolean workblock_result = WorkblockAI.call(villager, plugin, player);
         boolean should_be_disabled = nametag_result || block_result || workblock_result;
+
 
         //  If villager AI is being toggled
         if (should_be_disabled == VillagerUtilities.getMarker(villager, plugin)) {
@@ -138,15 +142,26 @@ public class EventListener implements Listener {
 
         Villager vil = (Villager) event.getEntity();
 
-        if (VillagerUtilities.hasMarker(vil, plugin)) {
+        if (VillagerUtilities.hasMarker(vil, plugin) && !VillagerUtilities.getMarker(vil, plugin)) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void playerJoin(PlayerJoinEvent event) {
+        if (!event.getPlayer().hasPermission("avl.notify.update")) return;
+        new UpdateChecker(plugin, 102949).getVersion(version -> {
+            if (plugin.getDescription().getVersion().equals(version)) {
+                event.getPlayer().sendMessage(ChatColor.GREEN + "AntiVillagerLag is up to date!");
+            } else {
+                event.getPlayer().sendMessage(ChatColor.GREEN + "There is an update for AntiVillagerLag! https://www.spigotmc.org/resources/antivillagerlag.102949/");
+            }
+        });
     }
 
     // Event to handle Villager updating
     @EventHandler
     public void afterTrade(InventoryCloseEvent event) {
-
 
         Player player = (Player) event.getPlayer();
         if(player.hasPermission("avl.disable"))

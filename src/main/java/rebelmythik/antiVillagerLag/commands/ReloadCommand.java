@@ -27,6 +27,7 @@ public class ReloadCommand implements CommandExecutor {
             VillagerUtilities.updateNameTags(plugin);
             VillagerUtilities.updateStandingOnBlocks(plugin);
             VillagerUtilities.updateWorkstationBlocks(plugin);
+            VillagerUtilities.updateRestockTimes(plugin);
         }
         return true;
     }

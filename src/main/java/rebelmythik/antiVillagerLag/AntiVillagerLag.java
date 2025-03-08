@@ -3,6 +3,7 @@ package rebelmythik.antiVillagerLag;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.MultiLineChart;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,6 +13,7 @@ import rebelmythik.antiVillagerLag.commands.ReloadCommand;
 import rebelmythik.antiVillagerLag.commands.RemoveChangesCommand;
 import rebelmythik.antiVillagerLag.commands.UnoptimizeCommand;
 import rebelmythik.antiVillagerLag.events.EventListener;
+import rebelmythik.antiVillagerLag.utils.UpdateChecker;
 import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
 
 import java.io.File;
@@ -41,6 +43,7 @@ public final class AntiVillagerLag extends JavaPlugin {
         VillagerUtilities.updateNameTags(this);
         VillagerUtilities.updateStandingOnBlocks(this);
         VillagerUtilities.updateWorkstationBlocks(this);
+        VillagerUtilities.updateRestockTimes(this);
 
         //  Bstats Code
         int pluginId = 15890;
@@ -52,6 +55,15 @@ public final class AntiVillagerLag extends JavaPlugin {
             valueMap.put("players", Bukkit.getOnlinePlayers().size());
             return valueMap;
         }));
+
+        //  Check for plugin updates
+        new UpdateChecker(this, 102949).getVersion(version -> {
+            if (this.getDescription().getVersion().equals(version)) {
+                getLogger().info("AntiVillagerLag is up to date!");
+            } else {
+                getLogger().info("There is an update for AntiVillagerLag! https://www.spigotmc.org/resources/antivillagerlag.102949/");
+            }
+        });
     }
 
     @Override

@@ -1,6 +1,5 @@
 # These names will cause the villager to be disabled when named with a nametag
 NamesThatDisable:
-  -
   - Optimize
   - Bonk
 
