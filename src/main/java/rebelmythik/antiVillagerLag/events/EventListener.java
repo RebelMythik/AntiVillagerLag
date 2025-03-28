@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.TradeSelectEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import rebelmythik.antiVillagerLag.AntiVillagerLag;
 import rebelmythik.antiVillagerLag.utils.UpdateChecker;
 import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
@@ -92,7 +93,10 @@ public class EventListener implements Listener {
         //  If the villager AI is not being toggled
         else {
             //  If nametag shouldn't be consumed, give one back
+            if (!VillagerUtilities.hasMarker(villager, plugin)) return;
             if (player.getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG) && !plugin.getConfig().getBoolean("toggleableoptions.usenametags")) {
+                ItemStack nametag = player.getInventory().getItemInMainHand();
+                if (!nametag.getItemMeta().hasDisplayName()) return;
                 player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
             }
 

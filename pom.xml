@@ -6,7 +6,7 @@
 
     <groupId>rebelmythik</groupId>
     <artifactId>antivillagerlag</artifactId>
-    <version>3.0.3</version>
+    <version>3.0.4</version>
     <packaging>jar</packaging>
 
     <name>antivillagerlag</name>

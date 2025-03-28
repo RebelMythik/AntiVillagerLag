@@ -1,5 +1,5 @@
 name: AntiVillagerLag
-version: '3.0.3'
+version: '3.0.4'
 main: rebelmythik.antiVillagerLag.AntiVillagerLag
 api-version: '1.20'
 authors: [ RebelMythik, CaveRaider ]

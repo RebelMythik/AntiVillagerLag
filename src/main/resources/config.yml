@@ -60,7 +60,7 @@ toggleableoptions:
 messages:
   no-permission: "&cYou don't have permission to use this command."
   reload-message: "&aPlugin successfully reloaded."
-  cooldown-ai-message: "&cou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
+  cooldown-ai-message: "&cYou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
   cooldown-levelup-message: "&cThe villager is currently leveling up! You can use the villager again in %avlseconds% seconds."
   next-restock: "&cThe next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
   optimize-command-usage: "&cCorrect Usage is /avloptimize <radius>"

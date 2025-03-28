@@ -70,7 +70,7 @@ public class RemoveChangesCommand implements CommandExecutor {
     // Probably should create a new method to remove all special tags but for now renabling is enough
     private void removeVillagerChanges() {
         for (World world : Bukkit.getWorlds()) {
-            for (Entity entity : world.getEntities()) {
+            for (Entity entity : world.getLivingEntities()) {
                 if (entity.getType() == EntityType.VILLAGER) {
                     Villager vil = (Villager) entity;
                     VillagerUtilities.CleanseTheVillagers(vil, plugin);

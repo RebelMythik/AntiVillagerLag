@@ -4,7 +4,7 @@
   <groupId>rebelmythik</groupId>
   <artifactId>antivillagerlag</artifactId>
   <name>antivillagerlag</name>
-  <version>3.0.3</version>
+  <version>3.0.4</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
     <resources>
