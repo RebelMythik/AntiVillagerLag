@@ -45,7 +45,7 @@ public class OptimizeCommand implements CommandExecutor {
         }
         boolean canSearchRadius = radius <= plugin.getConfig().getInt("RadiusLimit");
         if(!canSearchRadius){
-            player.sendMessage(VillagerUtilities.colorcodes.cm(plugin.getConfig().getString("messages.radius-limit")));
+            player.sendMessage(VillagerUtilities.colorcodes.cm(plugin.getConfig().getString("messages.radius-limit")).replace("%avlradiuslimit%", plugin.getConfig().getString("RadiusLimit")));
             return true;
         }
         player.sendMessage(VillagerUtilities.colorcodes.cm(plugin.getConfig().getString("messages.searching-radius")).replace("%avlradius%", String.valueOf(radius)));
