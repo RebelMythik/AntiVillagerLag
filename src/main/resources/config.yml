@@ -39,6 +39,9 @@ ai-toggle-cooldown: 600
 # The maximum radius in blocks the /avloptimize command can search
 RadiusLimit: 50
 
+# the default radius for /avloptimize when no argument is specified
+RadiusDefault: 50
+
 toggleableoptions:
   # Prevent trading with villagers when they aren't disabled. Still allows players to preview trades
   preventtrading: true
@@ -67,3 +70,6 @@ messages:
   unoptimize-command-usage: "&cCorrect Usage is /avlunoptimize <radius>"
   radius-limit: "&cThe radius you tried is to big. Radius limit is 50 blocks."
   VillagerMustBeDisabled: "&cYou need to disable the villager before you can trade with it"
+  searching-radius: "&aSearching radius of %avlradius% blocks."
+  radius-invalid: "&cRadius must be a valid Integer."
+
