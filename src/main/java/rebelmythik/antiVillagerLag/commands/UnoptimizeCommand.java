@@ -22,13 +22,28 @@ public class UnoptimizeCommand implements CommandExecutor {
         //  Make sure it's a player
         if (!(commandSender instanceof Player)) return false;
         Player player = (Player) commandSender;
-        //  Config access
-        int radius = plugin.getConfig().getInt("RadiusLimit");
+
         //  Check if they have permission
         if(!player.hasPermission("avl.unoptimize")) {
             player.sendMessage(VillagerUtilities.colorcodes.cm(plugin.getConfig().getString("messages.no-permission")));
             return true;
         }
+
+        //searchable radius based on first argument specified, if null defaults to config
+        int radius;
+        try{
+            radius = (strings != null && strings.length > 0) ? Integer.parseInt(strings[0]) : plugin.getConfig().getInt("RadiusDefault");
+        } catch (NumberFormatException e) {
+            player.sendMessage(VillagerUtilities.colorcodes.cm(plugin.getConfig().getString("messages.radius-invalid")));
+            return true;
+        }
+        boolean canSearchRadius = radius <= plugin.getConfig().getInt("RadiusLimit");
+        if(!canSearchRadius){
+            player.sendMessage(VillagerUtilities.colorcodes.cm(plugin.getConfig().getString("messages.radius-limit")).replace("%avlradiuslimit%", plugin.getConfig().getString("RadiusLimit")));
+            return true;
+        }
+        player.sendMessage(VillagerUtilities.colorcodes.cm(plugin.getConfig().getString("messages.searching-radius")).replace("%avlradius%", String.valueOf(radius)));
+
         // Search for nearby villagers
         player.getNearbyEntities(radius, radius, radius).forEach(entity -> {
             if (entity instanceof Villager) {
