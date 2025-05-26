@@ -3,12 +3,9 @@ package rebelmythik.antiVillagerLag.events;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import rebelmythik.antiVillagerLag.AntiVillagerLag;
 import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
-
-import java.util.function.Supplier;
 
 public class NameTagAI {
 
@@ -20,9 +17,11 @@ public class NameTagAI {
             String name = villager.getCustomName();
             if (name != null) name = name.toLowerCase().replaceAll("(?i)[§&][0-9A-FK-ORXLo]", "");
             return VillagerUtilities.disabling_names.contains(name);
-
         }
-        if (!nametag.getItemMeta().hasDisplayName()) return false;
+        if (!nametag.getItemMeta().hasDisplayName()) {
+            String villagerName = villager.getCustomName().replaceAll("(?i)[§&][0-9A-FK-ORXLo]", "");
+            return VillagerUtilities.disabling_names.contains(villagerName.toLowerCase());
+        }
         //  Should the villager be disabled?
         String itemName = nametag.getItemMeta().getDisplayName().replaceAll("(?i)[§&][0-9A-FK-ORXLo]", "");
         return VillagerUtilities.disabling_names.contains(itemName.toLowerCase());

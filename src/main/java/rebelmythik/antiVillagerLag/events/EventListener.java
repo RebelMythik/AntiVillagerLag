@@ -86,6 +86,8 @@ public class EventListener implements Listener {
                 VillagerUtilities.setAiCooldown(villager, plugin, plugin.getConfig().getLong("ai-toggle-cooldown"));
                 //  If nametag shouldn't be consumed, give one back
                 if (player.getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG) && !plugin.getConfig().getBoolean("toggleableoptions.usenametags")) {
+                    ItemStack nametag = player.getInventory().getItemInMainHand();
+                    if (!nametag.getItemMeta().hasDisplayName()) return;
                     player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
                 }
             }
@@ -99,7 +101,6 @@ public class EventListener implements Listener {
                 if (!nametag.getItemMeta().hasDisplayName()) return;
                 player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() + 1);
             }
-
         }
 
         //  Restock
