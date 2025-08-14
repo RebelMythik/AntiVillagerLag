@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import rebelmythik.antiVillagerLag.AntiVillagerLag;
+import rebelmythik.antiVillagerLag.utils.SchedulerUtils;
 import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
 
 public class UnoptimizeCommand implements CommandExecutor {
@@ -48,18 +49,20 @@ public class UnoptimizeCommand implements CommandExecutor {
         player.getNearbyEntities(radius, radius, radius).forEach(entity -> {
             if (entity instanceof Villager) {
                 Villager villager = (Villager) entity;
-                //  Setup new Villagers
-                if (!VillagerUtilities.hasMarker(villager, plugin)) {
-                    VillagerUtilities.setAiCooldown(villager, plugin, 0);
-                    VillagerUtilities.setLevelCooldown(villager, plugin, 0);
-                    VillagerUtilities.setLastRestock(villager, plugin);
+                SchedulerUtils.runAtEntity(villager, plugin, () -> {
+                    //  Setup new Villagers
+                    if (!VillagerUtilities.hasMarker(villager, plugin)) {
+                        VillagerUtilities.setAiCooldown(villager, plugin, 0);
+                        VillagerUtilities.setLevelCooldown(villager, plugin, 0);
+                        VillagerUtilities.setLastRestock(villager, plugin);
+                        VillagerUtilities.setMarker(villager, plugin, true);
+                    }
+                    //  Rename villager
+                    villager.setCustomName("");
+                    //  Update the marker and AI
                     VillagerUtilities.setMarker(villager, plugin, true);
-                }
-                //  Rename villager
-                villager.setCustomName("");
-                //  Update the marker and AI
-                VillagerUtilities.setMarker(villager, plugin, true);
-                villager.setAware(true);
+                    villager.setAware(true);
+                });
             }
         });
         return true;

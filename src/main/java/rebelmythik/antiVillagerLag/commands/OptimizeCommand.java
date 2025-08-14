@@ -12,6 +12,7 @@ import rebelmythik.antiVillagerLag.events.BlockAI;
 import rebelmythik.antiVillagerLag.events.NameTagAI;
 import rebelmythik.antiVillagerLag.events.WorkblockAI;
 import rebelmythik.antiVillagerLag.utils.ColorCode;
+import rebelmythik.antiVillagerLag.utils.SchedulerUtils;
 import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
 
 public class OptimizeCommand implements CommandExecutor {
@@ -54,19 +55,20 @@ public class OptimizeCommand implements CommandExecutor {
         player.getNearbyEntities(radius, radius, radius).forEach(entity -> {
             if (entity instanceof Villager) {
                 Villager villager = (Villager) entity;
-                //  Setup new Villagers
-                if (!VillagerUtilities.hasMarker(villager, plugin)) {
-                    VillagerUtilities.setAiCooldown(villager, plugin, 0);
-                    VillagerUtilities.setLevelCooldown(villager, plugin, 0);
-                    VillagerUtilities.setLastRestock(villager, plugin);
-                    VillagerUtilities.setMarker(villager, plugin, true);
-                }
-                //  Rename villager
-                villager.setCustomName(VillagerUtilities.disabling_names.getFirst());
-                //  Update the marker and AI
-                VillagerUtilities.setMarker(villager, plugin, false);
-                villager.setAware(false);
-
+                SchedulerUtils.runAtEntity(villager, plugin, () -> {
+                    //  Setup new Villagers
+                    if (!VillagerUtilities.hasMarker(villager, plugin)) {
+                        VillagerUtilities.setAiCooldown(villager, plugin, 0);
+                        VillagerUtilities.setLevelCooldown(villager, plugin, 0);
+                        VillagerUtilities.setLastRestock(villager, plugin);
+                        VillagerUtilities.setMarker(villager, plugin, true);
+                    }
+                    //  Rename villager
+                    villager.setCustomName(VillagerUtilities.disabling_names.getFirst());
+                    //  Update the marker and AI
+                    VillagerUtilities.setMarker(villager, plugin, false);
+                    villager.setAware(false);
+                });
             }
         });
         return true;
