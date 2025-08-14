@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import rebelmythik.antiVillagerLag.AntiVillagerLag;
 import rebelmythik.antiVillagerLag.utils.ColorCode;
+import rebelmythik.antiVillagerLag.utils.SchedulerUtils;
 import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
 
 public class RemoveChangesCommand implements CommandExecutor {
@@ -73,7 +74,9 @@ public class RemoveChangesCommand implements CommandExecutor {
             for (Entity entity : world.getLivingEntities()) {
                 if (entity.getType() == EntityType.VILLAGER) {
                     Villager vil = (Villager) entity;
-                    VillagerUtilities.CleanseTheVillagers(vil, plugin);
+                    SchedulerUtils.runAtEntity(vil, plugin, () -> {
+                        VillagerUtilities.CleanseTheVillagers(vil, plugin);
+                    });
                 }
             }
         }
