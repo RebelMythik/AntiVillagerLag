@@ -19,8 +19,9 @@ public class NameTagAI {
             return VillagerUtilities.disabling_names.contains(name);
         }
         if (!nametag.getItemMeta().hasDisplayName()) {
-            String villagerName = villager.getCustomName().replaceAll("(?i)[§&][0-9A-FK-ORXLo]", "");
-            return VillagerUtilities.disabling_names.contains(villagerName.toLowerCase());
+            String name = villager.getCustomName();
+            if (name != null) name = name.toLowerCase().replaceAll("(?i)[§&][0-9A-FK-ORXLo]", "");
+            return VillagerUtilities.disabling_names.contains(name);
         }
         //  Should the villager be disabled?
         String itemName = nametag.getItemMeta().getDisplayName().replaceAll("(?i)[§&][0-9A-FK-ORXLo]", "");
