@@ -32,3 +32,9 @@ permissions:
     default: false
   avl.notify.update:
     op: true
+  avl.optmize:
+    default: false
+  avl.unoptimize:
+    default: false
+  avl.disable:
+    default: false

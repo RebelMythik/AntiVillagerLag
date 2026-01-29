@@ -83,6 +83,9 @@ public class EventListener implements Listener {
             } else {
                 VillagerUtilities.setMarker(villager, plugin, !should_be_disabled);
                 villager.setAware(!should_be_disabled);
+                if (plugin.getConfig().getBoolean("toggleableoptions.silence_villagers")) {
+                    villager.setSilent(should_be_disabled);
+                }
                 VillagerUtilities.setAiCooldown(villager, plugin, plugin.getConfig().getLong("ai-toggle-cooldown"));
                 //  If nametag shouldn't be consumed, give one back
                 if (player.getInventory().getItemInMainHand().getType().equals(Material.NAME_TAG) && !plugin.getConfig().getBoolean("toggleableoptions.usenametags")) {
