@@ -1,5 +1,6 @@
 package rebelmythik.antiVillagerLag.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import rebelmythik.antiVillagerLag.AntiVillagerLag;
@@ -27,8 +28,11 @@ public class RestockVillager {
         }
 
         // Check if it's time to restock
-        long worldTick = vil.getWorld().getFullTime();
-        long currentDayTick = vil.getWorld().getTime();
+        //long worldTick = vil.getWorld().getFullTime();
+        //long currentDayTick = vil.getWorld().getTime();
+        long worldTick = Bukkit.getWorlds().get(0).getFullTime();
+        long currentDayTick = Bukkit.getWorlds().get(0).getTime();
+
         long beginningOfDayTick = worldTick - currentDayTick;
         long vilTick = VillagerUtilities.getLastRestock(vil, plugin);
 

@@ -1,5 +1,6 @@
 package rebelmythik.antiVillagerLag.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Villager;
@@ -77,8 +78,9 @@ public class VillagerUtilities {
         createData(v, plugin, LEVEL_COOLDOWN_KEY, (System.currentTimeMillis() / 1000) + cooldown);
     }
     public static void setLastRestock(Villager v, AntiVillagerLag plugin) {
-        createData(v, plugin, LAST_RESTOCK_KEY, v.getWorld().getFullTime());
+        createData(v, plugin, LAST_RESTOCK_KEY, Bukkit.getWorlds().get(0).getFullTime()); //v.getWorld().getFullTime());
     }
+
 
     public static long getAiCooldown(Villager v, AntiVillagerLag plugin) {
         return getData(v, plugin,  AI_COOLDOWN_KEY);
